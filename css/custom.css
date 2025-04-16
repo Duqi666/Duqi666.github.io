@@ -1,51 +1,79 @@
 /* 页脚与头图透明 */
 #footer {
-    background: transparent !important;
-  }
-  #page-header {
-    background: transparent !important;
-  }
-  
-  /* 白天模式遮罩透明 */
-  #footer::before {
-    background: transparent !important;
-  }
-  #page-header::before {
-    background: transparent !important;
-  }
-  
-  /* 夜间模式遮罩透明 */
-  [data-theme="dark"] #footer::before {
-    background: transparent !important;
-  }
-  [data-theme="dark"] #page-header::before {
-    background: transparent !important;
-  }  
-  
-  .card-widget,.recent-post-item{
-    background-color: rgba(255, 255, 255, 0.1) !important;
-    border-radius:8px!important;
-  }
-  .article-title,.content,.author-info-name,.headline,.length-num,.card-widget{
-    color: #FFFFFF!important;
-  }
+  background: transparent !important;
+}
 
-  .card-archive-list-date,.card-archive-list-count,a.title,.aside-list-item{
-    color: #FFFFFF!important;
-  }
-  .recent-post-info,.card-widget{
-    border: 2px solid rgba(255, 255, 255, 0.5);
-    border-radius:8px!important;
-  }
+#page-header {
+  background: transparent !important;
+}
 
-  .article-meta-wrap{
-    color: rgb(225,225,225);
-  }
+/* 白天模式遮罩透明 */
+#footer::before {
+  background: transparent !important;
+}
 
-  .site-name,.menus_item{
-    font-size: 30px!important;
-  }
+#page-header::before {
+  background: transparent !important;
+}
 
-  h1{
-    font-size: 50px!important;
-  }
+/* 夜间模式遮罩透明 */
+[data-theme="dark"] #footer::before {
+  background: transparent !important;
+}
+
+[data-theme="dark"] #page-header::before {
+  background: transparent !important;
+}
+/* 
+.card-widget,
+.wow {
+  background-color: rgba(255, 255, 255, 0.1) !important;
+  border-radius: 8px !important;
+  border: 2px solid rgba(255, 255, 255, 0.5);
+}
+
+.article-title,
+.content,
+.author-info-name,
+.headline,
+.length-num,
+.card-widget {
+  color: #FFFFFF !important;
+}
+
+.card-archive-list-date,
+.card-archive-list-count,
+a.title,
+.aside-list-item,
+.toc-link {
+  color: #FFFFFF !important;
+}
+
+
+.article-meta-wrap,
+time {
+  color: rgb(205, 205, 205) !important;
+}
+
+.site-name,
+.menus_item {
+  font-size: 30px !important;
+}
+
+#site-title {
+  font-size: 50px !important;
+}
+
+#post {
+  background-color: rgba(255, 255, 255, 0.1) !important;
+  color: #FFFFFF !important;
+  border-radius: 8px !important;
+  border: 2px solid rgba(255, 255, 255, 0.5);
+}
+
+h1,
+h2,
+h3 {
+  color: #FFFFFF !important;
+}
+ */
