@@ -20,4 +20,32 @@
   }
   [data-theme="dark"] #page-header::before {
     background: transparent !important;
+  }  
+  
+  .card-widget,.recent-post-item{
+    background-color: rgba(255, 255, 255, 0.1) !important;
+    border-radius:8px!important;
+  }
+  .article-title,.content,.author-info-name,.headline,.length-num,.card-widget{
+    color: #FFFFFF!important;
+  }
+
+  .card-archive-list-date,.card-archive-list-count,a.title,.aside-list-item{
+    color: #FFFFFF!important;
+  }
+  .recent-post-info,.card-widget{
+    border: 2px solid rgba(255, 255, 255, 0.5);
+    border-radius:8px!important;
+  }
+
+  .article-meta-wrap{
+    color: rgb(225,225,225);
+  }
+
+  .site-name,.menus_item{
+    font-size: 30px!important;
+  }
+
+  h1{
+    font-size: 50px!important;
   }
