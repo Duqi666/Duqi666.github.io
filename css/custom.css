@@ -24,7 +24,7 @@
 [data-theme="dark"] #page-header::before {
   background: transparent !important;
 }
-/* 
+
 .card-widget,
 .wow {
   background-color: rgba(255, 255, 255, 0.1) !important;
@@ -76,4 +76,4 @@ h2,
 h3 {
   color: #FFFFFF !important;
 }
- */
+

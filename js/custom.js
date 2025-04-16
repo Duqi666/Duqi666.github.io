@@ -3,7 +3,7 @@ document.addEventListener('DOMContentLoaded', function () {
     const element = document.querySelector('#menus a.site-page.child[href="javascript:void(0)"]');
     console.log(element);
     element.addEventListener('click', function (event) {
-        console.log('asas')});
+        console.log('asas')
         // 创建一个 style 元素
         const styleElement = document.createElement('style');
         document.head.appendChild(styleElement);
@@ -32,6 +32,9 @@ document.addEventListener('DOMContentLoaded', function () {
 
         // 添加 h1, h2, h3 样式规则
         styleSheet.insertRule('h1, h2, h3 { color: #FFFFFF !important; }', styleSheet.cssRules.length);
-            
-    
+
+
+
+    });
+
 });
