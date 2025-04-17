@@ -25,8 +25,9 @@
   background: transparent !important;
 }
 
-.card-widget,
-.wow {
+/* .card-widget,
+.wow,
+#archive {
   background-color: rgba(255, 255, 255, 0.1) !important;
   border-radius: 8px !important;
   border: 2px solid rgba(255, 255, 255, 0.5);
@@ -45,10 +46,12 @@
 .card-archive-list-count,
 a.title,
 .aside-list-item,
-.toc-link {
+.toc-link ,#archive,.article-sort-item-title{
   color: #FFFFFF !important;
 }
-
+.article-sort-item-title{
+  font-size: 15px;
+}
 
 .article-meta-wrap,
 time {
@@ -62,18 +65,47 @@ time {
 
 #site-title {
   font-size: 50px !important;
-}
+} */
 
-#post {
+/* #post {
   background-color: rgba(255, 255, 255, 0.1) !important;
   color: #FFFFFF !important;
   border-radius: 8px !important;
   border: 2px solid rgba(255, 255, 255, 0.5);
-}
+} */
 
-h1,
+/* h1,
 h2,
 h3 {
   color: #FFFFFF !important;
+} */
+#post-info{
+  text-align: center!important;
 }
 
+.site-name,
+.menus_item {
+  font-size: 30px !important;
+}
+
+#site-title {
+  font-size: 50px !important;
+} 
+
+.menus_item_child li {
+  /* 设置宽度，例如 100px，你可以根据需要调整 */
+  width: 100px;
+  /* 设置高度，例如 50px，你可以根据需要调整 */
+  height: 50px;
+  background-color: black;
+  color: white!important;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.menus_item_child li span{
+  color: white!important;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
