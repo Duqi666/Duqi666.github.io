@@ -109,3 +109,10 @@ h3 {
   justify-content: center;
   align-items: center;
 }
+
+body {
+  background-size: cover; /* 调整背景图片大小以覆盖整个元素 */
+  background-position: center; /* 将背景图片定位在元素的中心 */
+  background-attachment: fixed; /* 使背景图片固定，不随页面滚动 */
+
+}

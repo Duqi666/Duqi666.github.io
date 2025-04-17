@@ -130,3 +130,23 @@ window.addEventListener('DOMContentLoaded', function () {
 
 });
 
+const lowResBgUrl = '/imgs/output_low.png';
+const highResBgUrl = '/imgs/output.png';
+
+// 先设置低分辨率背景图片
+document.body.style.backgroundImage = `url('${lowResBgUrl}')`;
+
+// 创建 Image 对象加载高分辨率图片
+const img = new Image();
+img.src = highResBgUrl;
+
+// 当高分辨率图片加载完成后，替换背景图片
+img.onload = function () {
+    document.body.style.backgroundImage = `url('${highResBgUrl}')`;
+    console.log('gao');
+};
+
+// 处理图片加载失败的情况
+img.onerror = function () {
+    console.error('Failed to load high resolution background image.');
+};
