@@ -94,7 +94,7 @@ h3 {
 
 .menus_item_child li {
   /* 设置宽度，例如 100px，你可以根据需要调整 */
-  width: 100px;
+  width: 100%!important;
   /* 设置高度，例如 50px，你可以根据需要调整 */
   height: 50px;
   background-color: black;
@@ -110,9 +110,59 @@ h3 {
   align-items: center;
 }
 
+.menus_item_child{
+  width: 100%!important ;
+}
+
 body {
   background-size: cover; /* 调整背景图片大小以覆盖整个元素 */
   background-position: center; /* 将背景图片定位在元素的中心 */
   background-attachment: fixed; /* 使背景图片固定，不随页面滚动 */
 
+}
+
+
+
+
+
+.recent-post-info{
+  /* border-top: 2px solid #FFF;
+  border-right: 2px solid #FFF;
+  border-bottom: 2px solid #FFF;
+  border-top-left-radius: 0;
+  border-top-right-radius: 10px;
+  border-bottom-right-radius: 10px;
+  border-bottom-left-radius: 0;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  height: 100%; */
+  flex-grow: 1;
+
+}
+
+.post_cover a .post-bg{
+  height: auto!important;
+  width:100%!important; 
+  /* display: block!important */
+
+}
+
+
+
+.blog-slider__title{
+  font-size: 25px!important;
+}
+
+/* .post_cover,.right{
+  text-align: right
+} */
+
+.blog-slider__img{
+  width: auto!important;
+  height:100%!important; 
+}
+
+.blog-slider,.blog-slider__img{
+  padding: 0px !important;
 }

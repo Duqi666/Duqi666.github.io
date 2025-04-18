@@ -1,18 +1,21 @@
 // 定义样式规则
 const styleRules = `
 .custom-style .card-widget,
-.custom-style .wow,
+.custom-style .recent-post-item,
 .custom-style #archive {
     background-color: rgba(255, 255, 255, 0.1) !important;
-    border-radius: 8px !important;
-    border: 2px solid rgba(255, 255, 255, 0.5);
+    border: 3px solid #FFF; /* 设置边框的宽度、样式和颜色 /
+    border-radius: 5px; / 设置四个角的圆角半径，数值越大圆角越明显 */
 }
+
 .custom-style .article-title,
 .custom-style .content,
 .custom-style .author-info-name,
 .custom-style .headline,
 .custom-style .length-num,
-.custom-style .card-widget {
+.custom-style .card-widget,
+.custom-style .blog-slider__title,
+.custom-style .blog-slider__text {
     color: #FFFFFF !important;
 }
 .custom-style .card-archive-list-date,
@@ -25,7 +28,8 @@ const styleRules = `
     color: #FFFFFF !important;
 }
 .custom-style .article-meta-wrap,
-.custom-style time {
+.custom-style time,
+.custom-style .blog-slider__code{
     color: rgb(205, 205, 205) !important;
 }
 .custom-style .site-name,
@@ -66,7 +70,7 @@ function setupClickEvent() {
     }
 }
 
-function style_apply(){
+function style_apply() {
     const isStyleApplied = localStorage.getItem('customStyleApplied') === 'true';
     if (isStyleApplied) {
         document.body.classList.add('custom-style');
@@ -74,7 +78,7 @@ function style_apply(){
         document.body.classList.remove('custom-style');
     }
 }
-    
+
 
 
 // 页面加载时检查 LocalStorage 状态并应用样式
@@ -100,14 +104,14 @@ window.addEventListener('DOMContentLoaded', function () {
     const currentPage = window.location.pathname;
     const regex = /^\/(19|20)\d{2}\/(0[1-9]|1[0-2])\/(0[1-9]|[12][0-9]|3[01])\/[^/]+\/$/;
     let is_paper = regex.test(currentPage);
-    console.log(currentPage,is_paper);
+    console.log(currentPage, is_paper);
 
-    if(is_paper){
+    if (is_paper) {
         document.body.classList.remove('custom-style');
-    }else{
-        if(localStorage.getItem('Mode') === 'dark'){
+    } else {
+        if (localStorage.getItem('Mode') === 'dark') {
             document.body.classList.add('custom-style');
-        }else{
+        } else {
             document.body.classList.remove('custom-style');
         }
     }
@@ -130,7 +134,7 @@ window.addEventListener('DOMContentLoaded', function () {
 
 });
 
-const lowResBgUrl = '/imgs/output_low.png';
+const lowResBgUrl = '/imgs/I.png';
 const highResBgUrl = '/imgs/output.png';
 
 // 先设置低分辨率背景图片
@@ -150,3 +154,45 @@ img.onload = function () {
 img.onerror = function () {
     console.error('Failed to load high resolution background image.');
 };
+
+if (!localStorage.getItem('isFirstVisit')) {
+    // 首次访问，设置 Mode 为 dark
+    localStorage.setItem('Mode', 'dark');
+    // 设置 isFirstVisit 标志
+    localStorage.setItem('isFirstVisit', 'true');
+}
+
+
+// document.addEventListener('DOMContentLoaded', function () {
+//     const currentPage = window.location.pathname;
+//     if(currentPage=='/'){
+//         const postCoverDivLeft = document.querySelectorAll('div.post_cover.left');
+//         for(let i=0;i<postCoverDivLeft.length;i++){
+//             let post_bg = postCoverDivLeft[i].getElementsByClassName('post-bg')
+//             postCoverDivLeft[i].style.width = post_bg[0].offsetWidth + 'px';
+//             post_bg[0].getBoundingClientRect().clientWidth
+//             console.log( post_bg[0].clientWidth);
+//         }
+//         const postCoverDivRight = document.querySelectorAll('div.post_cover.right');
+//         for(let i=0;i<postCoverDivRight.length;i++){
+//             let post_bg = postCoverDivRight[i].getElementsByClassName('post-bg')
+//             postCoverDivRight[i].style.width = post_bg[0].offsetWidth + 'px';
+
+//         }
+//     }
+// });
+
+// ----index_layout=6时
+document.addEventListener('DOMContentLoaded', function () {
+    const currentPage = window.location.pathname;
+    if(currentPage=='/'){
+        const postCoverDivRight = document.querySelectorAll('div.post_cover');
+        for(let i=0;i<postCoverDivRight.length;i++){
+            let post_bg = postCoverDivRight[i].getElementsByClassName('post-bg')
+            postCoverDivRight[i].style.height = post_bg[0].offsetHeight + 'px';
+        }
+    }
+});
+
+
+
