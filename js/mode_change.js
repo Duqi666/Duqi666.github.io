@@ -1,53 +1,36 @@
-// 定义样式规则
-const styleRules = `
-.custom-style .card-widget,
-.custom-style .recent-post-item,
-.custom-style #archive {
-    background-color: rgba(255, 255, 255, 0.1) !important;
-    border: 3px solid #FFF; /* 设置边框的宽度、样式和颜色 /
-    border-radius: 5px; / 设置四个角的圆角半径，数值越大圆角越明显 */
-}
-
-.custom-style .article-title,
-.custom-style .content,
-.custom-style .author-info-name,
-.custom-style .headline,
-.custom-style .length-num,
-.custom-style .card-widget,
-.custom-style .blog-slider__title,
-.custom-style .blog-slider__text {
-    color: #FFFFFF !important;
-}
-.custom-style .card-archive-list-date,
-.custom-style .card-archive-list-count,
-.custom-style a.title,
-.custom-style .aside-list-item,
-.custom-style .toc-link,
-.custom-style #archive,
-.custom-style .article-sort-item-title {
-    color: #FFFFFF !important;
-}
-.custom-style .article-meta-wrap,
-.custom-style time,
-.custom-style .blog-slider__code{
-    color: rgb(205, 205, 205) !important;
-}
-.custom-style .site-name,
-.custom-style .menus_item {
-    font-size: 30px !important;
-}
-.custom-style #site-title {
-    font-size: 50px !important;
-}
-
-`;
-
+const lowResBgUrl_dark = '/imgs/output_low.png';
+const highResBgUrl_dark = '/imgs/output.png';
+const highResBgUrl_light_white = '/imgs/cloud_white.jpg'
+const highResBgUrl_light = '/imgs/cloud.jpg'
+const link = document.createElement('link');
+link.rel = 'stylesheet';
+link.href = '/css/mode_change.css';
+console.log(link.href);
+document.head.appendChild(link);
 // 创建并添加样式表到页面
-function addStyleSheet(rules) {
-    const styleElement = document.createElement('style');
-    styleElement.type = 'text/css';
-    styleElement.textContent = rules;
-    document.head.appendChild(styleElement);
+// function addStyleSheet(rules) {
+//     const styleElement = document.createElement('style');
+//     styleElement.type = 'text/css';
+//     styleElement.textContent = rules;
+//     document.head.appendChild(styleElement);
+// }
+
+function mode_change_preloader(interval_time){
+    const $loadingBox = document.getElementById('loading-box')
+    const $body = document.body
+    const preloader = {
+      endLoading: () => {
+        $body.style.overflow = ''
+        $loadingBox.classList.add('loaded')
+      },
+      initLoading: () => {
+        $body.style.overflow = 'hidden'
+        $loadingBox.classList.remove('loaded')
+      }
+    }
+
+    preloader.initLoading()
+    setTimeout(preloader.endLoading,interval_time)
 }
 
 // 查找触发元素并添加点击事件监听器
@@ -57,7 +40,9 @@ function setupClickEvent() {
         triggerElementDark.addEventListener('click', function () {
             localStorage.setItem('customStyleApplied', 'true');
             localStorage.setItem('Mode', 'dark');
-            document.body.classList.add('custom-style');
+            document.body.classList.add('mode_change');
+            load_background_img(lowResBgUrl_dark,lowResBgUrl_dark,highResBgUrl_dark,highResBgUrl_dark)
+            mode_change_preloader(300)
         });
     }
     const triggerElementLight = document.querySelector('#menus a.site-page.child[href="javascript:void(1)"]');
@@ -65,17 +50,20 @@ function setupClickEvent() {
         triggerElementLight.addEventListener('click', function () {
             localStorage.setItem('customStyleApplied', 'false');
             localStorage.setItem('Mode', 'light');
-            document.body.classList.remove('custom-style');
+            document.body.classList.remove('mode_change');
+            load_background_img(highResBgUrl_light,highResBgUrl_light_white,highResBgUrl_light,highResBgUrl_light_white)
+            mode_change_preloader(300)
         });
+
     }
 }
 
 function style_apply() {
     const isStyleApplied = localStorage.getItem('customStyleApplied') === 'true';
     if (isStyleApplied) {
-        document.body.classList.add('custom-style');
+        document.body.classList.add('mode_change');
     } else {
-        document.body.classList.remove('custom-style');
+        document.body.classList.remove('mode_change');
     }
 }
 
@@ -86,13 +74,13 @@ function style_apply() {
 
 //     const isStyleApplied = localStorage.getItem('customStyleApplied') === 'true';
 //     if (isStyleApplied) {
-//         document.body.classList.add('custom-style');
+//         document.body.classList.add('mode_change');
 //     }
 // }
 
 // 页面加载完成后执行操作
 document.addEventListener('DOMContentLoaded', function () {
-    addStyleSheet(styleRules);
+    // addStyleSheet(styleRules);
     // applyStyleBasedOnStorage();
     setupClickEvent();
     // style_apply();
@@ -105,63 +93,78 @@ window.addEventListener('DOMContentLoaded', function () {
     const regex = /^\/(19|20)\d{2}\/(0[1-9]|1[0-2])\/(0[1-9]|[12][0-9]|3[01])\/[^/]+\/$/;
     let is_paper = regex.test(currentPage);
     console.log(currentPage, is_paper);
-
     if (is_paper) {
-        document.body.classList.remove('custom-style');
+        document.body.classList.remove('mode_change');
     } else {
         if (localStorage.getItem('Mode') === 'dark') {
-            document.body.classList.add('custom-style');
+            document.body.classList.add('mode_change');
         } else {
-            document.body.classList.remove('custom-style');
+            document.body.classList.remove('mode_change');
         }
     }
-    // console.log(currentPage);
-    // let papers = document.getElementsByClassName('article-title')
-    // let flag = 0;
-    // for(let i = 1;i<papers.length;i++){
-    //     if (papers[i].hasAttribute('href') && papers[i].getAttribute('herf')==currentPage){
-    //         flag = 1;
-    //         console.log('12312312');
-    //         break
-    //     }
-    // }
-    // if(flag==1){
-    //     localStorage.setItem('customStyleApplied', 'false');
-    // }else{
-    //     localStorage.setItem('customStyleApplied', 'true');
-    // }
-
-
 });
 
-const lowResBgUrl = '/imgs/I.png';
-const highResBgUrl = '/imgs/output.png';
+
 
 // 先设置低分辨率背景图片
-document.body.style.backgroundImage = `url('${lowResBgUrl}')`;
+function load_background_img(lowUrl,lowUrlWhite,HighUrl,HighUrlWhite){
+    const pageHeader = document.getElementById('page-header');
+    if (pageHeader) {
+        pageHeader.style.backgroundImage = `url('${lowUrl}')`;
+        const img = new Image();
+        img.src = lowUrl;
+        img.onload = function () {
+            pageHeader.style.backgroundImage = `url('${HighUrl}')`;
+            console.log('gao');
+        };
+    }
+    document.body.style.backgroundImage = `url('${lowUrlWhite}')`;
+    // changeBackground(lowUrlWhite)
+    const img = new Image();
+    // 创建 Image 对象加载高分辨率图片
+    img.src = lowUrlWhite;
+    // 当高分辨率图片加载完成后，替换背景图片
+    img.onload = function () {
+        document.body.style.backgroundImage = `url('${HighUrlWhite}')`;
+        console.log('gao');
+    };
 
-// 创建 Image 对象加载高分辨率图片
-const img = new Image();
-img.src = highResBgUrl;
+    // 处理图片加载失败的情况
 
-// 当高分辨率图片加载完成后，替换背景图片
-img.onload = function () {
-    document.body.style.backgroundImage = `url('${highResBgUrl}')`;
-    console.log('gao');
-};
+}
+// function load_background_img_light(lowResBgUrl,highResBgUrl){
+//     const pageHeader = document.getElementById('page-header');
+//     if (pageHeader) {
+//         pageHeader.style.removeProperty('background');
+//         pageHeader.style.backgroundImage = `url('${lowResBgUrl}')`;
 
-// 处理图片加载失败的情况
-img.onerror = function () {
-    console.error('Failed to load high resolution background image.');
-};
+//     }
+//     document.body.style.backgroundImage = `url('${highResBgUrl}')`;
+
+
+
+// }
+
+
+
+
+// function load_background_img(ImgUrl,ImgUrlWhite){
+//     document.body.style.backgroundImage = `url('${lowResBgUrl}')`;
+// }
 
 if (!localStorage.getItem('isFirstVisit')) {
     // 首次访问，设置 Mode 为 dark
     localStorage.setItem('Mode', 'dark');
     // 设置 isFirstVisit 标志
     localStorage.setItem('isFirstVisit', 'true');
+    load_background_img(lowResBgUrl_dark,lowResBgUrl_dark,highResBgUrl_dark,highResBgUrl_dark)
+}else{
+    if(localStorage.getItem('Mode')=='dark'){
+        load_background_img(lowResBgUrl_dark,lowResBgUrl_dark,highResBgUrl_dark,highResBgUrl_dark)
+    }else{
+        load_background_img(highResBgUrl_light,highResBgUrl_light_white,highResBgUrl_light,highResBgUrl_light_white)
+    }
 }
-
 
 // document.addEventListener('DOMContentLoaded', function () {
 //     const currentPage = window.location.pathname;
@@ -183,16 +186,59 @@ if (!localStorage.getItem('isFirstVisit')) {
 // });
 
 // ----index_layout=6时
-document.addEventListener('DOMContentLoaded', function () {
-    const currentPage = window.location.pathname;
-    if(currentPage=='/'){
-        const postCoverDivRight = document.querySelectorAll('div.post_cover');
-        for(let i=0;i<postCoverDivRight.length;i++){
-            let post_bg = postCoverDivRight[i].getElementsByClassName('post-bg')
-            postCoverDivRight[i].style.height = post_bg[0].offsetHeight + 'px';
-        }
+// document.addEventListener('DOMContentLoaded', function () {
+//     const currentPage = window.location.pathname;
+//     if(currentPage=='/'){
+//         const postCoverDivRight = document.querySelectorAll('div.post_cover');
+//         for(let i=0;i<postCoverDivRight.length;i++){
+//             let post_bg = postCoverDivRight[i].getElementsByClassName('post-bg')
+//             postCoverDivRight[i].style.height = post_bg[0].offsetHeight + 'px';
+//         }
+//     }
+// });
+
+
+// const mainElement = document.querySelector('main');
+// const clonedMain = mainElement.cloneNode(false);
+// clonedMain.classList.add('cloned-main');
+// mainElement.parentNode.insertBefore(clonedMain, mainElement);
+
+// const resizeObserver = new ResizeObserver((entries) => {
+//     for (const entry of entries) {
+//         if (entry.target === mainElement) {
+//             const newHeight = entry.contentRect.height;
+//             clonedMain.style.height = newHeight + 'px';
+//         }
+//     }
+// });
+
+// resizeObserver.observe(mainElement);
+
+// let previousTop = mainElement.getBoundingClientRect().top;
+
+// function checkPosition() {
+//     const currentTop = mainElement.getBoundingClientRect().top;
+//     if (currentTop!== previousTop) {
+//         clonedMain.style.top = currentTop + window.scrollY + 'px';
+//         previousTop = currentTop;
+//     }
+//     requestAnimationFrame(checkPosition);
+// }
+
+// checkPosition();
+
+
+const allNodes = document.createTreeWalker(
+    document.body,
+    NodeFilter.SHOW_TEXT,
+    null,
+    false
+);
+while (allNodes.nextNode()) {
+    const node = allNodes.currentNode;
+    if (node.textContent.trim() === '-') {
+        console.log(node);
+        node.textContent = ''
+        break;
     }
-});
-
-
-
+}

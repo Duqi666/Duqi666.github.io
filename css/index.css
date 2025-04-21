@@ -2635,9 +2635,27 @@ figure.highlight pre .javascript .function {
   text-align: center;
   line-height: 2.4;
   border-radius: 7px;
+  overflow: hidden;
+  position: relative;
+  z-index: 1;
 }
-#aside-content .card-info #card-info-btn:hover {
-  background-color: var(--btn-hover-color);
+#aside-content .card-info #card-info-btn::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 0;
+  height: 100%;
+  background-color: #0c84d3;
+  -webkit-transition: width 0.5s ease;
+  -moz-transition: width 0.5s ease;
+  -o-transition: width 0.5s ease;
+  -ms-transition: width 0.5s ease;
+  transition: width 0.5s ease;
+  z-index: -1;
+}
+#aside-content .card-info #card-info-btn:hover::before {
+  width: 100%;
 }
 #aside-content .card-info #card-info-btn span {
   padding-left: 10px;
@@ -3891,8 +3909,8 @@ figure.highlight pre .javascript .function {
 #loading-box .spinner-box .configure-border-1 {
   position: absolute;
   padding: 3px;
-  width: 115px;
-  height: 115px;
+  width: 130px;
+  height: 130px;
   background: #ffab91;
   -webkit-animation: configure-clockwise 3s ease-in-out 0s infinite alternate;
   -moz-animation: configure-clockwise 3s ease-in-out 0s infinite alternate;
@@ -3903,8 +3921,8 @@ figure.highlight pre .javascript .function {
 #loading-box .spinner-box .configure-border-2 {
   left: -115px;
   padding: 3px;
-  width: 115px;
-  height: 115px;
+  width: 130px;
+  height: 130px;
   background: #3ff9dc;
   -webkit-transform: rotate(45deg);
   -moz-transform: rotate(45deg);
@@ -3919,8 +3937,17 @@ figure.highlight pre .javascript .function {
 }
 #loading-box .spinner-box .loading-word {
   position: absolute;
-  color: var(--preloader-color);
-  font-size: 16px;
+  overflow: hidden;
+  margin: 0 auto;
+  width: 110px !important;
+  height: 110px !important;
+  border-radius: 70px;
+  position: absolute;
+}
+#loading-box .spinner-box .loading-word .loading-img {
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: cover !important;
 }
 #loading-box .spinner-box .configure-core {
   width: 100%;
