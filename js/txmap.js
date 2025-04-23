@@ -60,7 +60,8 @@ function showWelcome() {
             posdesc = "拾起一片枫叶赠予你";
             break;
         case "芬兰":
-            posdesc = "什么时候回来啊，我想去吃抄手了！";
+            items = ["什么时候回来啊，我想去吃抄手了！",'去北辰三角洲搞学习吗？','一天700是不是有点贵啊？','少nia一点！','那是滴！']
+            posdesc = items[Math.floor(Math.random()*items.length)]
             break;
         case "中国":
             pos = ipLoacation.result.ad_info.province + " " + ipLoacation.result.ad_info.city + " " + ipLoacation.result.ad_info.district;
@@ -149,7 +150,8 @@ function showWelcome() {
                 case "湖南省":
                     switch (ipLoacation.result.ad_info.city) {
                         case "长沙市":
-                            posdesc = "去喝杯茶颜悦色吗？我卡里还有好多钱！";
+                            items = ["去喝杯茶颜悦色吗？我卡里还有好多钱！",'去中南大学看看吧！','去五一广场看人挤人吗？','解放西走起！']
+                            posdesc = items[Math.floor(Math.random()*items.length)]
                             break;
                         case "益阳市":
                             posdesc = "益山益水 益美益阳";
@@ -227,8 +229,10 @@ function showWelcome() {
 
     try {
         //自定义文本和需要放的位置
-        document.getElementById("welcome-info").innerHTML =
-            `<b><center>🎉 欢迎信息 🎉</center>&emsp;&emsp;欢迎来自 <span style="color:var(--theme-color)">${pos}</span> 的小伙伴，${timeChange}您现在距离站长约 <span style="color:var(--theme-color)">${dist}</span> 公里，当前的IP地址为： <span style="color:var(--theme-color)">${ip}</span>， ${posdesc}</b>`;
+        // document.getElementById("welcome-info").innerHTML =
+        //     `<b><center>🎉 欢迎信息 🎉</center>&emsp;&emsp;欢迎来自 <span style="color:var(--theme-color)">${pos}</span> 的小伙伴，${timeChange}您现在距离站长约 <span style="color:var(--theme-color)">${dist}</span> 公里，当前的IP地址为： <span style="color:var(--theme-color)">${ip}</span>， ${posdesc}</b>`;
+            document.getElementById("welcome-info").innerHTML =
+            `<b><center>🎉 欢迎信息 🎉</center>&emsp;&emsp;欢迎来自 <span style="color:var(--theme-color)">${pos}</span> 的小伙伴，${timeChange}您现在距离站长约 <span style="color:var(--theme-color)">${dist}</span> 公里， ${posdesc}</b>`;
     } catch (err) {
         // console.log("Pjax无法获取#welcome-info元素🙄🙄🙄")
     }
