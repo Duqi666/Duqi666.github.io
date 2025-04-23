@@ -2,11 +2,15 @@
 .mode_change .recent-post-item,
 .mode_change #archive,
 .mode_change #category,
-.mode_change #tag{
-    background-color: rgba(255, 255, 255, 0.1) !important;
-    border: 1px solid #cfcfcf;; /* 设置边框的宽度、样式和颜色 /
+.mode_change #tag,
+.mode_change .article-sort-item,
+.mode_change .page-class{
+    background-color: rgba(255, 255, 255, 0.1) !important ;
+    border: 1px solid #cfcfcf; /* 设置边框的宽度、样式和颜色 /
     border-radius: 5px; / 设置四个角的圆角半径，数值越大圆角越明显 */
 }
+
+
 
 .mode_change .article-title,
 .mode_change .content,
@@ -73,4 +77,5 @@
 .mode_change .card-clock-dackorlight {
     color: #ffffff;
 }
+
 

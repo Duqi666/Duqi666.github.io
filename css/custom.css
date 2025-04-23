@@ -143,28 +143,6 @@ body {
 
 
 
-/* .recent-post-info{
-  border-top: 2px solid #FFF;
-  border-right: 2px solid #FFF;
-  border-bottom: 2px solid #FFF;
-  border-top-left-radius: 0;
-  border-top-right-radius: 10px;
-  border-bottom-right-radius: 10px;
-  border-bottom-left-radius: 0;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  height: 100%;
-  flex-grow: 1;
-
-}
-
-.post_cover a .post-bg{
-  height: auto!important;
-  width:100%!important; 
-} */
-
-
 
 .blog-slider__title{
   font-size: 25px!important;
@@ -192,75 +170,6 @@ body {
   background-color: #7d7f7e !important;
 }
 
-/* .recent-post-item,.blog-slider__wrp
-{
-  height: 200px!important;
-} */
-/* .blog-slider
-{
-  height: 250px!important;
-}  */
-
-/* .blog-slider__item
-{
-  height: 350px!important;
-}  */
-
-/* .blog-slider__wrp,.swiper-wrapper
-{
-  height: 200px!important;
-}  */
-
-
-
-
-
-/* .magnet_item{
-  background-color: rgba(43, 43, 43, 0.8) !important;
-  
-}
-
-.magnet_link_context{
-  color:aliceblue;
-}
-
-.magnet_item:hover{
-  background-color: rgba(135, 135, 136, 0.5) !important;
-}
-
-.magnet_link_context:hover{
-  color:rgb(20, 20, 20);
-} */
-
-/* .hexo_electric_clock,.card-background{
-  background-color: rgba(0, 0, 0,0) !important;
-}
-
-#card-clock-clockdate,.card-clock-weather,.card-clock-humidity,.card-clock-time,.card-clock-ip,.card-clock-location,.card-clock-dackorlight {
-  color:#ffffff
-} */
-
-
-
-/* main {
-  width: 100% !important;
-  margin: 0 0 !important;
-  background-color: white;
-  padding-left: 10%!important;
-  padding-right: 10%!important
-} */
-
-
-/* main::before {
-  content: "";
-  position: fixed;
-  top: 0;
-  left: 0;
-  width: 100vw;
-  height: 100vh;
-  background-color: red;
-  z-index: -1;
-} */
 
 body,#page-header,.not-home-page {
 
@@ -302,3 +211,25 @@ body,#page-header,.not-home-page {
   transform: translate(-50%, -50%);
   margin: 0 auto
 }
+
+
+:root {
+  --ichika-color: #49A6E9;
+}
+
+/* 公告&欢迎页 */
+.card-announcement {
+  line-height:30px;
+  font-size:16px;
+}
+
+.card-announcement .item-headline span{
+  margin-left:0!important;
+}
+
+.card-announcement span{
+  font-weight:bold;
+  font-size:20px!important;
+  color:var(--ichika-color);
+}
+

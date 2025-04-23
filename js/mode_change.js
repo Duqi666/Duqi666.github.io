@@ -5,15 +5,7 @@ const highResBgUrl_light = '/imgs/cloud.jpg'
 const link = document.createElement('link');
 link.rel = 'stylesheet';
 link.href = '/css/mode_change.css';
-console.log(link.href);
 document.head.appendChild(link);
-// 创建并添加样式表到页面
-// function addStyleSheet(rules) {
-//     const styleElement = document.createElement('style');
-//     styleElement.type = 'text/css';
-//     styleElement.textContent = rules;
-//     document.head.appendChild(styleElement);
-// }
 
 function mode_change_preloader(interval_time){
     const $loadingBox = document.getElementById('loading-box')
@@ -38,7 +30,7 @@ function setupClickEvent() {
     const triggerElementDark = document.querySelector('#menus a.site-page.child[href="javascript:void(0)"]');
     if (triggerElementDark) {
         triggerElementDark.addEventListener('click', function () {
-            localStorage.setItem('customStyleApplied', 'true');
+            document.documentElement.setAttribute('mode', 'dark');
             localStorage.setItem('Mode', 'dark');
             document.body.classList.add('mode_change');
             load_background_img(lowResBgUrl_dark,lowResBgUrl_dark,highResBgUrl_dark,highResBgUrl_dark)
@@ -48,22 +40,13 @@ function setupClickEvent() {
     const triggerElementLight = document.querySelector('#menus a.site-page.child[href="javascript:void(1)"]');
     if (triggerElementLight) {
         triggerElementLight.addEventListener('click', function () {
-            localStorage.setItem('customStyleApplied', 'false');
             localStorage.setItem('Mode', 'light');
+            document.documentElement.setAttribute('mode', 'light');
             document.body.classList.remove('mode_change');
             load_background_img(highResBgUrl_light,highResBgUrl_light_white,highResBgUrl_light,highResBgUrl_light_white)
             mode_change_preloader(300)
         });
 
-    }
-}
-
-function style_apply() {
-    const isStyleApplied = localStorage.getItem('customStyleApplied') === 'true';
-    if (isStyleApplied) {
-        document.body.classList.add('mode_change');
-    } else {
-        document.body.classList.remove('mode_change');
     }
 }
 
@@ -92,16 +75,20 @@ window.addEventListener('DOMContentLoaded', function () {
     const currentPage = window.location.pathname;
     const regex = /^\/(19|20)\d{2}\/(0[1-9]|1[0-2])\/(0[1-9]|[12][0-9]|3[01])\/[^/]+\/$/;
     let is_paper = regex.test(currentPage);
-    console.log(currentPage, is_paper);
-    if (is_paper) {
+    let Mode = localStorage.getItem('Mode')
+
+    if(is_paper && Mode === 'dark'){
         document.body.classList.remove('mode_change');
-    } else {
-        if (localStorage.getItem('Mode') === 'dark') {
-            document.body.classList.add('mode_change');
-        } else {
-            document.body.classList.remove('mode_change');
-        }
     }
+    else if(is_paper && Mode != 'dark'){
+        document.body.classList.remove('mode_change');
+    }
+    else if( Mode === 'dark'){
+        document.body.classList.add('mode_change');
+    }else{
+        document.body.classList.remove('mode_change');
+    }
+    document.documentElement.setAttribute('mode', localStorage.getItem('Mode'));
 });
 
 
@@ -155,6 +142,7 @@ function load_background_img(lowUrl,lowUrlWhite,HighUrl,HighUrlWhite){
 if (!localStorage.getItem('isFirstVisit')) {
     // 首次访问，设置 Mode 为 dark
     localStorage.setItem('Mode', 'dark');
+    document.documentElement.setAttribute('mode', 'dark');
     // 设置 isFirstVisit 标志
     localStorage.setItem('isFirstVisit', 'true');
     load_background_img(lowResBgUrl_dark,lowResBgUrl_dark,highResBgUrl_dark,highResBgUrl_dark)
@@ -242,3 +230,4 @@ while (allNodes.nextNode()) {
         break;
     }
 }
+
