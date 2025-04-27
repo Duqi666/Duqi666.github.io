@@ -60,7 +60,7 @@ function showWelcome() {
             posdesc = "拾起一片枫叶赠予你";
             break;
         case "芬兰":
-            items = ["什么时候回来啊，我想去吃抄手了！",'去北辰三角洲搞学习吗？','一天700是不是有点贵啊？','少nia一点！','那是滴！']
+            items = ["什么时候回来啊，我想去吃抄手了！",'去北辰三角洲搞学习吗？','一天700是不是有点贵啊？','少nia一点！','那是滴！','你再不回来我就跟别人天天去吃鸡爪子！']
             posdesc = items[Math.floor(Math.random()*items.length)]
             break;
         case "中国":

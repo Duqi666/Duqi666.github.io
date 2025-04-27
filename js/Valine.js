@@ -547,8 +547,8 @@
             mathJax: !1,
             emojiCDN: "",
             emojiMaps: void 0,
-            enableQQ: !1,
-            requiredFields: []
+            enableQQ: 1,
+            requiredFields: ["nick", "mail"]
         }, t.defaultMeta = ["nick", "mail", "link"], t.QQCacheKey = "_v_Cache_Q", t.MetaCacheKey = "_v_Cache_Meta", t.RandomStr = function(e) {
             return (Date.now() + Math.round(1e3 * Math.random())).toString(32)
         }, t.VERSION = "1.5.2"
@@ -1708,6 +1708,7 @@
             };
             var M = e.$el.find(".vsubmit"),
                 L = function(t) {
+                    console.log(e.cfg.requiredFields);
                     if (e.cfg.requiredFields.indexOf("nick") > -1 && _.nick.length < 1) return v.nick[0].focus(), void e.$el.find(".status-bar").text("" + e.i18n.t("nickFail")).empty(3e3);
                     if (e.cfg.requiredFields.indexOf("mail") > -1 && !/[\w-\.]+@([\w-]+\.)+[a-z]{2,3}/.test(_.mail)) return v.mail[0].focus(), void e.$el.find(".status-bar").text("" + e.i18n.t("mailFail")).empty(3e3);
                     if ("" == B) return void v.comment[0].focus();
