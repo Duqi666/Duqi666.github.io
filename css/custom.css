@@ -234,3 +234,9 @@ body,#page-header,.not-home-page {
 }
 
 
+
+.leaflet-marker-icon{
+  display: flex !important;
+  justify-content: center;
+  align-items: center;
+}

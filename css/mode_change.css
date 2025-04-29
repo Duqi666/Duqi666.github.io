@@ -21,7 +21,15 @@
 .mode_change .blog-slider__title,
 .mode_change .blog-slider__text,
 .mode_change .article-sort-title,
-.mode_change .article-sort-item{
+.mode_change .article-sort-item,
+.mode_change .comment-headline,
+.mode_change .vcomment,
+.mode_change .vcontent p,
+.mode_change .vinput,
+.mode_change .vlink,
+.mode_change .vheader input::-webkit-input-placeholder,
+.mode_change .vedit textarea::-webkit-input-placeholder,
+.mode_change .vrow{
     color: #FFFFFF !important;
 }
 .mode_change .card-archive-list-date,
