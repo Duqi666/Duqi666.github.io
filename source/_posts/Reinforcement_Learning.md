@@ -604,7 +604,7 @@ print(V)
 <img src="https://gitee.com/leeMX111/reinforcement_learning_imgs/raw/master/202508241405517.png" height="300px" />
 
 ```python
-class GridWorld:
+class GridWorld:  
     def __init__(self):
         self.RewardMap = [[0,0,0,1],
                           [0,None,0,-1],
