@@ -1,0 +1,89 @@
+.mode_change .card-widget,
+.mode_change .recent-post-item,
+.mode_change #archive,
+.mode_change #category,
+.mode_change #tag,
+.mode_change .article-sort-item,
+.mode_change .page-class{
+    background-color: rgba(255, 255, 255, 0.1) !important ;
+    border: 1px solid #cfcfcf; /* 设置边框的宽度、样式和颜色 /
+    border-radius: 5px; / 设置四个角的圆角半径，数值越大圆角越明显 */
+}
+
+
+
+.mode_change .article-title,
+.mode_change .content,
+.mode_change .author-info-name,
+.mode_change .headline,
+.mode_change .length-num,
+.mode_change .card-widget,
+.mode_change .blog-slider__title,
+.mode_change .blog-slider__text,
+.mode_change .article-sort-title,
+.mode_change .article-sort-item,
+.mode_change .comment-headline,
+.mode_change .vcomment,
+.mode_change .vcontent p,
+.mode_change .vinput,
+.mode_change .vlink,
+.mode_change .vheader input::-webkit-input-placeholder,
+.mode_change .vedit textarea::-webkit-input-placeholder,
+.mode_change .vrow{
+    color: #FFFFFF !important;
+}
+.mode_change .card-archive-list-date,
+.mode_change .card-archive-list-count,
+.mode_change a.title,
+.mode_change .aside-list-item,
+.mode_change .toc-link,
+.mode_change #archive,
+.mode_change .article-sort-item-title {
+    color: #FFFFFF !important;
+}
+.mode_change .article-meta-wrap,
+.mode_change time,
+.mode_change .blog-slider__code{
+    color: rgb(205, 205, 205) !important;
+}
+.mode_change .site-name,
+.mode_change .menus_item {
+    font-size: 30px !important;
+}
+.mode_change #site-title {
+    font-size: 50px !important;
+}
+
+.mode_change .magnet_item{
+    background-color: rgba(43, 43, 43, 0.9) !important;
+    
+}
+  
+.mode_change .magnet_link_context{
+    color:aliceblue;
+  }
+  
+.mode_change .magnet_item:hover{
+    background-color: rgba(200, 200, 200, 0.9) !important;
+  }
+  
+.mode_change .magnet_link_context:hover{
+    color:rgb(0, 0, 0);
+  }
+
+.mode_change .hexo_electric_clock,
+.mode_change .card-background {
+    background-color: rgba(0, 0, 0, 0) !important;
+}
+
+.mode_change #card-clock-clockdate,
+.mode_change .card-clock-weather,
+.mode_change .card-clock-humidity,
+.mode_change .card-clock-time,
+.mode_change .card-clock-ip,
+.mode_change .card-clock-location,
+.mode_change .card-clock-dackorlight {
+    color: #ffffff;
+}
+
+

@@ -1,0 +1,253 @@
+/* 页脚与头图透明 */
+#footer {
+  background: transparent !important;
+}
+
+/* #page-header {
+  background: transparent !important;
+} */
+
+/* 白天模式遮罩透明 */
+#footer::before {
+  background: transparent !important;
+}
+
+#page-header::before {
+  background: transparent !important;
+}
+
+/* 夜间模式遮罩透明 */
+[data-theme="dark"] #footer::before {
+  background: transparent !important;
+}
+
+[data-theme="dark"] #page-header::before {
+  background: transparent !important;
+}
+
+#page-header{
+  background-attachment: fixed!important;
+}
+
+
+/* .cloned-main {
+  width: 100%!important;
+  max-width: 12000px!important;
+  margin:0;
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  z-index: -1;
+  background-color: rgba(255,255,255,0.5);
+} */
+
+
+/* .card-widget,
+.wow,
+#archive {
+  background-color: rgba(255, 255, 255, 0.1) !important;
+  border-radius: 8px !important;
+  border: 2px solid rgba(255, 255, 255, 0.5);
+}
+
+.article-title,
+.content,
+.author-info-name,
+.headline,
+.length-num,
+.card-widget {
+  color: #FFFFFF !important;
+}
+
+.card-archive-list-date,
+.card-archive-list-count,
+a.title,
+.aside-list-item,
+.toc-link ,#archive,.article-sort-item-title{
+  color: #FFFFFF !important;
+}
+.article-sort-item-title{
+  font-size: 15px;
+}
+
+.article-meta-wrap,
+time {
+  color: rgb(205, 205, 205) !important;
+}
+
+.site-name,
+.menus_item {
+  font-size: 30px !important;
+}
+
+#site-title {
+  font-size: 50px !important;
+} */
+
+/* #post {
+  background-color: rgba(255, 255, 255, 0.1) !important;
+  color: #FFFFFF !important;
+  border-radius: 8px !important;
+  border: 2px solid rgba(255, 255, 255, 0.5);
+} */
+
+/* h1,
+h2,
+h3 {
+  color: #FFFFFF !important;
+} */
+#post-info{
+  text-align: center!important;
+}
+
+.site-name,
+.menus_item {
+  font-size: 30px !important;
+}
+
+#site-title {
+  font-size: 50px !important;
+} 
+
+.menus_item_child li {
+  /* 设置宽度，例如 100px，你可以根据需要调整 */
+  width: 100%!important;
+  /* 设置高度，例如 50px，你可以根据需要调整 */
+  height: 50px;
+  background-color: black;
+  color: white!important;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.menus_item_child li span{
+  color: white!important;
+  /* display: flex;
+  justify-content: center;
+  align-items: center; */
+}
+
+.menus_item_child{
+  width: 100%!important ;
+}
+
+body {
+  background-size: cover; /* 调整背景图片大小以覆盖整个元素 */
+  background-position: center; /* 将背景图片定位在元素的中心 */
+  background-attachment: fixed; /* 使背景图片固定，不随页面滚动 */
+
+}
+
+
+
+
+
+
+.blog-slider__title{
+  font-size: 25px!important;
+}
+
+/* .post_cover,.right{
+  text-align: right
+} */
+
+.blog-slider__img{
+  width: 350px!important;
+  height:100%!important; 
+}
+
+.blog-slider,.blog-slider__img{
+  padding: 5px !important;
+}
+
+
+.menus_item_child li a .fa-fw{
+  color: white;
+}
+
+.menus_item_child li:hover{
+  background-color: #7d7f7e !important;
+}
+
+
+body,#page-header,.not-home-page {
+
+  /* background-image: url('/imgs/output_low.png'); */
+  /* transition: background-image 0.5s ease-in-out !important; */
+  /* transition: none !important; */
+  animation:none !important
+}
+
+
+.not-home-page{
+  height: 450px!important;
+  /* background-attachment: fixed !important; */
+}
+
+
+#loading-box .spinner-box .loading-word .loading-img{
+  width: 100% !important;
+  height: 100% !important;
+  object-fit: cover !important;
+}
+
+/* #loading-box .spinner-box .loading-word
+{
+  overflow: hidden;
+  margin: 0 auto;
+  width: 110px !important;
+  height: 110px !important;
+  border-radius: 70px;
+  z-index: 9999999;
+  position: absolute;
+} */
+
+#menus
+{
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  margin: 0 auto
+}
+
+
+:root {
+  --ichika-color: #49A6E9;
+}
+
+/* 公告&欢迎页 */
+.card-announcement {
+  line-height:30px;
+  font-size:16px;
+}
+
+.card-announcement .item-headline span{
+  margin-left:0!important;
+}
+
+.card-announcement span{
+  font-weight:bold;
+  font-size:20px!important;
+  color:var(--ichika-color);
+}
+
+
+
+.leaflet-marker-icon{
+  display: flex !important;
+  justify-content: center;
+  align-items: center;
+}
+
+
+#article-container{
+  font-size: large;
+}
+
+
+.img-inline {
+  display: inline-block;
+  vertical-align: middle;
+}
