@@ -3562,6 +3562,16 @@ figure.highlight pre .javascript .function {
 #aside-content .card-announcement .item-headline i {
   color: #f00;
 }
+#aside-content .card-announcement .announcement-image {
+  margin-top: 10px;
+  text-align: center;
+}
+#aside-content .card-announcement .announcement-image img {
+  max-width: 100%;
+  height: auto;
+  border-radius: 8px;
+  object-fit: cover;
+}
 .avatar-img {
   overflow: hidden;
   margin: 0 auto;
