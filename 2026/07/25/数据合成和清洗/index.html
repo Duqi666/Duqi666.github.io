@@ -1,0 +1,524 @@
+<!DOCTYPE html><html lang="en" data-theme="light"><head><meta charset="UTF-8"><meta http-equiv="X-UA-Compatible" content="IE=edge"><meta name="viewport" content="width=device-width, initial-scale=1.0,viewport-fit=cover"><title>数据合成和清洗 | Merick'Blog</title><meta name="author" content="Mercik"><meta name="copyright" content="Mercik"><meta name="format-detection" content="telephone=no"><meta name="theme-color" content="#ffffff"><meta name="description" content="数据清洗一、启发式规则过滤利用基本规则的统计特征，快速剔除垃圾数据  长度过滤：文本长度过长或过短 符号密度过滤：文本中包含过多符号、emoji或HTML符号 重复行去重：利用简单哈希去除完全重复的文本 语言过滤：去除非目标语言文本  二、质量评估过滤2.1 困惑度（PPL）过滤—-重点利用模型的困惑度（PPL）来评估文本的质量，过滤掉低质量的文本。 困惑度公式：  PPL &#x3D; EXP(-\f">
+<meta property="og:type" content="article">
+<meta property="og:title" content="数据合成和清洗">
+<meta property="og:url" content="https://duqi666.github.io/2026/07/25/%E6%95%B0%E6%8D%AE%E5%90%88%E6%88%90%E5%92%8C%E6%B8%85%E6%B4%97/index.html">
+<meta property="og:site_name" content="Merick&#39;Blog">
+<meta property="og:description" content="数据清洗一、启发式规则过滤利用基本规则的统计特征，快速剔除垃圾数据  长度过滤：文本长度过长或过短 符号密度过滤：文本中包含过多符号、emoji或HTML符号 重复行去重：利用简单哈希去除完全重复的文本 语言过滤：去除非目标语言文本  二、质量评估过滤2.1 困惑度（PPL）过滤—-重点利用模型的困惑度（PPL）来评估文本的质量，过滤掉低质量的文本。 困惑度公式：  PPL &#x3D; EXP(-\f">
+<meta property="og:locale" content="en_US">
+<meta property="og:image" content="https://duqi666.github.io/imgs/I.png">
+<meta property="article:published_time" content="2026-07-25T04:40:01.186Z">
+<meta property="article:modified_time" content="2026-07-25T12:36:33.292Z">
+<meta property="article:author" content="Mercik">
+<meta property="article:tag" content="算法">
+<meta property="article:tag" content="大模型">
+<meta property="article:tag" content="学习">
+<meta property="article:tag" content="数据处理">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:image" content="https://duqi666.github.io/imgs/I.png"><script type="application/ld+json">{
+  "@context": "https://schema.org",
+  "@type": "BlogPosting",
+  "headline": "数据合成和清洗",
+  "url": "https://duqi666.github.io/2026/07/25/%E6%95%B0%E6%8D%AE%E5%90%88%E6%88%90%E5%92%8C%E6%B8%85%E6%B4%97/",
+  "image": "https://duqi666.github.io/imgs/I.png",
+  "datePublished": "2026-07-25T04:40:01.186Z",
+  "dateModified": "2026-07-25T12:36:33.292Z",
+  "author": [
+    {
+      "@type": "Person",
+      "name": "Mercik",
+      "url": "https://duqi666.github.io"
+    }
+  ]
+}</script><link rel="shortcut icon" href="/img/favicon.png"><link rel="canonical" href="https://duqi666.github.io/2026/07/25/%E6%95%B0%E6%8D%AE%E5%90%88%E6%88%90%E5%92%8C%E6%B8%85%E6%B4%97/index.html"><link rel="preconnect" href="//cdn.jsdelivr.net"/><link rel="preconnect" href="//busuanzi.ibruce.info"/><link rel="stylesheet" href="/css/index.css"><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/@fortawesome/fontawesome-free/css/all.min.css"><script>
+    (() => {
+      
+    const saveToLocal = {
+      set: (key, value, ttl) => {
+        if (!ttl) return
+        const expiry = Date.now() + ttl * 86400000
+        localStorage.setItem(key, JSON.stringify({ value, expiry }))
+      },
+      get: key => {
+        const itemStr = localStorage.getItem(key)
+        if (!itemStr) return undefined
+        const { value, expiry } = JSON.parse(itemStr)
+        if (Date.now() > expiry) {
+          localStorage.removeItem(key)
+          return undefined
+        }
+        return value
+      }
+    }
+
+    window.btf = {
+      saveToLocal,
+      getScript: (url, attr = {}) => new Promise((resolve, reject) => {
+        const script = document.createElement('script')
+        script.src = url
+        script.async = true
+        Object.entries(attr).forEach(([key, val]) => script.setAttribute(key, val))
+        script.onload = script.onreadystatechange = () => {
+          if (!script.readyState || /loaded|complete/.test(script.readyState)) resolve()
+        }
+        script.onerror = reject
+        document.head.appendChild(script)
+      }),
+      getCSS: (url, id) => new Promise((resolve, reject) => {
+        const link = document.createElement('link')
+        link.rel = 'stylesheet'
+        link.href = url
+        if (id) link.id = id
+        link.onload = link.onreadystatechange = () => {
+          if (!link.readyState || /loaded|complete/.test(link.readyState)) resolve()
+        }
+        link.onerror = reject
+        document.head.appendChild(link)
+      }),
+      addGlobalFn: (key, fn, name = false, parent = window) => {
+        if (!false && key.startsWith('pjax')) return
+        const globalFn = parent.globalFn || {}
+        globalFn[key] = globalFn[key] || {}
+        globalFn[key][name || Object.keys(globalFn[key]).length] = fn
+        parent.globalFn = globalFn
+      }
+    }
+  
+      
+      const activateDarkMode = () => {
+        document.documentElement.setAttribute('data-theme', 'dark')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#0d0d0d')
+        }
+      }
+      const activateLightMode = () => {
+        document.documentElement.setAttribute('data-theme', 'light')
+        if (document.querySelector('meta[name="theme-color"]') !== null) {
+          document.querySelector('meta[name="theme-color"]').setAttribute('content', '#ffffff')
+        }
+      }
+
+      btf.activateDarkMode = activateDarkMode
+      btf.activateLightMode = activateLightMode
+
+      const theme = saveToLocal.get('theme')
+    
+          theme === 'dark' ? activateDarkMode() : theme === 'light' ? activateLightMode() : null
+        
+      
+      const asideStatus = saveToLocal.get('aside-status')
+      if (asideStatus !== undefined) {
+        document.documentElement.classList.toggle('hide-aside', asideStatus === 'hide')
+      }
+    
+      
+    const detectApple = () => {
+      if (/iPad|iPhone|iPod|Macintosh/.test(navigator.userAgent)) {
+        document.documentElement.classList.add('apple')
+      }
+    }
+    detectApple()
+  
+    })()
+  </script><script>const GLOBAL_CONFIG = {
+  root: '/',
+  algolia: undefined,
+  localSearch: undefined,
+  translate: undefined,
+  highlight: {"plugin":"highlight.js","highlightCopy":true,"highlightLang":true,"highlightHeightLimit":200,"highlightFullpage":false,"highlightMacStyle":false},
+  copy: {
+    success: 'Copy Successful',
+    error: 'Copy Failed',
+    noSupport: 'Browser Not Supported'
+  },
+  relativeDate: {
+    homepage: false,
+    post: false
+  },
+  runtime: '',
+  dateSuffix: {
+    just: 'Just now',
+    min: 'minutes ago',
+    hour: 'hours ago',
+    day: 'days ago',
+    month: 'months ago'
+  },
+  copyright: undefined,
+  lightbox: 'null',
+  Snackbar: undefined,
+  infinitegrid: {
+    js: 'https://cdn.jsdelivr.net/npm/@egjs/infinitegrid/dist/infinitegrid.min.js',
+    buttonText: 'Load More'
+  },
+  isPhotoFigcaption: false,
+  islazyloadPlugin: false,
+  isAnchor: false,
+  percent: {
+    toc: true,
+    rightside: false,
+  },
+  autoDarkmode: false
+}</script><script id="config-diff">var GLOBAL_CONFIG_SITE = {
+  title: '数据合成和清洗',
+  isHighlightShrink: false,
+  isToc: true,
+  pageType: 'post'
+}</script><link rel="stylesheet" href="/css/custom.css" media="defer" onload="this.media='all'"><link rel="stylesheet" href="/css/universe.css"><link rel="stylesheet" href="/css/category.css"><link rel="stylesheet" href="/css/cat.css"><link rel="stylesheet" href="/css/neon_lamp.css"><link rel="stylesheet" href="/css/discuss.css"><!-- hexo injector head_end start -->
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/katex@0.12.0/dist/katex.min.css">
+<link rel="stylesheet" href="https://cdn.jsdelivr.net/gh/Zfour/hexo-electric-clock@1.0.6/clock.css"><link rel="stylesheet" href="https://npm.elemecdn.com/hexo-butterfly-swiper/lib/swiper.min.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://npm.elemecdn.com/hexo-butterfly-swiper/lib/swiperstyle.css" media="print" onload="this.media='all'"><link rel="stylesheet" href="https://npm.elemecdn.com/hexo-butterfly-wowjs/lib/animate.min.css" media="print" onload="this.media='screen'"><!-- hexo injector head_end end --><meta name="generator" content="Hexo 7.3.0"><link href="https://cdn.bootcss.com/KaTeX/0.11.1/katex.min.css" rel="stylesheet" /></head><body><div id="loading-box"><div class="loading-left-bg"></div><div class="loading-right-bg"></div><div class="spinner-box"><div class="configure-border-1"><div class="configure-core"></div></div><div class="configure-border-2"><div class="configure-core"></div></div><div class="loading-word"><img class="loading-img-center" src="/imgs/I.png" width="70" height="70"/></div></div></div><script>(()=>{
+  const $loadingBox = document.getElementById('loading-box')
+  const $body = document.body
+  const preloader = {
+    endLoading: () => {
+      if ($loadingBox.classList.contains('loaded')) return
+      $body.style.overflow = ''
+      $loadingBox.classList.add('loaded')
+    },
+    initLoading: () => {
+      $body.style.overflow = 'hidden'
+      $loadingBox.classList.remove('loaded')
+    }
+  }
+
+  preloader.initLoading()
+
+  if (document.readyState === 'complete') {
+    preloader.endLoading()
+  } else {
+    window.addEventListener('load', preloader.endLoading)
+    document.addEventListener('DOMContentLoaded', preloader.endLoading)
+    // Add timeout protection: force end after 7 seconds
+    setTimeout(preloader.endLoading, 7000)
+  }
+
+  if (false) {
+    btf.addGlobalFn('pjaxSend', preloader.initLoading, 'preloader_init')
+    btf.addGlobalFn('pjaxComplete', preloader.endLoading, 'preloader_end')
+  }
+})()</script><div id="sidebar"><div id="menu-mask"></div><div id="sidebar-menus"><div class="avatar-img text-center"><img src="/imgs/I.png" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="site-data text-center"><a href="/archives/"><div class="headline">Articles</div><div class="length-num">33</div></a><a href="/tags/"><div class="headline">Tags</div><div class="length-num">23</div></a><a href="/categories/"><div class="headline">Categories</div><div class="length-num">14</div></a></div><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 时间轴</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><span class="site-page group"><i class="fa-fw fas fa-list"></i><span> 模式</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="javascript:void(0)"><i class="fa-fw fa-regular fa-moon"></i><span> dark</span></a></li><li><a class="site-page child" href="javascript:void(1)"><i class="fa-fw fa-regular fa-sun"></i><span> light</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/travel/"><i class="fa-fw fas fa-video"></i><span> 足迹</span></a></div><div class="menus_item"><a class="site-page" href="/charts/"><i class="fa-fw fas fa-video"></i><span> 图表</span></a></div><div class="menus_item"><a class="site-page" href="/mseek/"><i class="fa-fw fas fa-comments"></i><span> M-Seek</span></a></div></div></div></div><div class="post" id="body-wrap"><header class="post-bg" id="page-header"><nav id="nav"><span id="blog-info"><a class="nav-site-title" href="/"><span class="site-name">Merick'Blog</span></a><a class="nav-page-title" href="/"><span class="site-name">数据合成和清洗</span><span class="site-name"><i class="fa-solid fa-circle-arrow-left"></i><span>  Back to Home</span></span></a></span><div id="menus"><div class="menus_items"><div class="menus_item"><a class="site-page" href="/"><i class="fa-fw fas fa-home"></i><span> 首页</span></a></div><div class="menus_item"><a class="site-page" href="/archives/"><i class="fa-fw fas fa-archive"></i><span> 时间轴</span></a></div><div class="menus_item"><a class="site-page" href="/tags/"><i class="fa-fw fas fa-tags"></i><span> 标签</span></a></div><div class="menus_item"><span class="site-page group"><i class="fa-fw fas fa-list"></i><span> 模式</span><i class="fas fa-chevron-down"></i></span><ul class="menus_item_child"><li><a class="site-page child" href="javascript:void(0)"><i class="fa-fw fa-regular fa-moon"></i><span> dark</span></a></li><li><a class="site-page child" href="javascript:void(1)"><i class="fa-fw fa-regular fa-sun"></i><span> light</span></a></li></ul></div><div class="menus_item"><a class="site-page" href="/categories/"><i class="fa-fw fas fa-folder-open"></i><span> 分类</span></a></div><div class="menus_item"><a class="site-page" href="/travel/"><i class="fa-fw fas fa-video"></i><span> 足迹</span></a></div><div class="menus_item"><a class="site-page" href="/charts/"><i class="fa-fw fas fa-video"></i><span> 图表</span></a></div><div class="menus_item"><a class="site-page" href="/mseek/"><i class="fa-fw fas fa-comments"></i><span> M-Seek</span></a></div></div><div id="toggle-menu"><span class="site-page"><i class="fas fa-bars fa-fw"></i></span></div></div></nav><div id="post-info"><h1 class="post-title">数据合成和清洗</h1><div id="post-meta"><div class="meta-firstline"><span class="post-meta-date"><i class="far fa-calendar-alt fa-fw post-meta-icon"></i><span class="post-meta-label">Created</span><time class="post-meta-date-created" datetime="2026-07-25T04:40:01.186Z" title="Created 2026-07-25 12:40:01">2026-07-25</time><span class="post-meta-separator">|</span><i class="fas fa-history fa-fw post-meta-icon"></i><span class="post-meta-label">Updated</span><time class="post-meta-date-updated" datetime="2026-07-25T12:36:33.292Z" title="Updated 2026-07-25 20:36:33">2026-07-25</time></span><span class="post-meta-categories"><span class="post-meta-separator">|</span><i class="fas fa-inbox fa-fw post-meta-icon"></i><a class="post-meta-categories" href="/categories/%E6%95%B0%E6%8D%AE%E5%A4%84%E7%90%86/">数据处理</a></span></div><div class="meta-secondline"><span class="post-meta-separator">|</span><span class="post-meta-wordcount"><i class="far fa-file-word fa-fw post-meta-icon"></i><span class="post-meta-label">Word Count:</span><span class="word-count">3.7k</span><span class="post-meta-separator">|</span><i class="far fa-clock fa-fw post-meta-icon"></i><span class="post-meta-label">Reading Time:</span><span>11mins</span></span><span class="post-meta-separator">|</span><span class="post-meta-pv-cv" id="" data-flag-title=""><i class="far fa-eye fa-fw post-meta-icon"></i><span class="post-meta-label">Post Views:</span><span id="busuanzi_value_page_pv"><i class="fa-solid fa-spinner fa-spin"></i></span></span></div></div></div></header><main class="layout" id="content-inner"><div id="post"><article class="container post-content" id="article-container"><meta name="referrer" content="no-referrer" />
+
+<h1 id="数据清洗"><a href="#数据清洗" class="headerlink" title="数据清洗"></a>数据清洗</h1><h2 id="一、启发式规则过滤"><a href="#一、启发式规则过滤" class="headerlink" title="一、启发式规则过滤"></a>一、启发式规则过滤</h2><p>利用基本规则的统计特征，快速剔除垃圾数据</p>
+<ul>
+<li>长度过滤：文本长度过长或过短</li>
+<li>符号密度过滤：文本中包含过多符号、emoji或HTML符号</li>
+<li>重复行去重：利用简单哈希去除完全重复的文本</li>
+<li>语言过滤：去除非目标语言文本</li>
+</ul>
+<h2 id="二、质量评估过滤"><a href="#二、质量评估过滤" class="headerlink" title="二、质量评估过滤"></a>二、质量评估过滤</h2><h3 id="2-1-困惑度（PPL）过滤—-重点"><a href="#2-1-困惑度（PPL）过滤—-重点" class="headerlink" title="2.1 困惑度（PPL）过滤—-重点"></a>2.1 困惑度（PPL）过滤—-重点</h3><p>利用模型的困惑度（PPL）来评估文本的质量，过滤掉低质量的文本。</p>
+<p>困惑度公式：</p>
+<script type="math/tex; mode=display">
+PPL = EXP(-\frac{1}{n} \sum_{i=1}^{n} \log p_{y_i})</script><p><strong>直觉理解</strong><br>模型给这段文本中每个Token分配的预测概率越高，<code>log p</code> 越接近0，PPL值就越低。<br><strong>打分逻辑</strong><br>PPL越低，代表模型对该文本的“拟合度”越高。</p>
+<ul>
+<li><strong>PPL很低</strong>：说明模型已经见过类似表达，文本通顺且符合语法（例如：“量子力学的波函数坍缩”）。</li>
+<li><strong>PPL极高</strong>（比如几百上千）：说明这段文本用词生僻、逻辑跳跃，甚至包含大量拼写错误。</li>
+</ul>
+<h4 id="PPL的三大先天缺陷（数学本质上的“盲区”）"><a href="#PPL的三大先天缺陷（数学本质上的“盲区”）" class="headerlink" title="PPL的三大先天缺陷（数学本质上的“盲区”）"></a>PPL的三大先天缺陷（数学本质上的“盲区”）</h4><p><strong>缺陷1：分布偏好（Distribution Bias）—— 爱“平庸”，恨“创新”</strong></p>
+<ul>
+<li><strong>表现</strong>：PPL天然偏好<strong>高概率、低信息熵</strong>的文本。像“好的，我明白了。”这种万能废话，PPL极低；而像“通过黎曼曲面上的共形映射来解析复变函数边界问题”这种专业表达，PPL往往很高。</li>
+<li><strong>后果</strong>：如果只保留低PPL数据，模型会变成“好好先生”，回答永远安全、平滑，但<strong>丧失深度推理和专业能力</strong>。</li>
+</ul>
+<p><strong>缺陷2：长度敏感性（Length Bias）—— 越长越吃亏</strong></p>
+<ul>
+<li><strong>表现</strong>：PPL是<strong>每个Token损失的平均值</strong>。长文本中只要出现一个极低概率的生僻词，整个平均PPL就会被剧烈拉高；而短文本即使全是废话，PPL也可能很好看。</li>
+<li><strong>后果</strong>：长且高质量的推理链（CoT）会被误判为低质量数据而被过滤。</li>
+</ul>
+<p><strong>缺陷3：模型特异（Model Specificity）—— 换模型，分不同</strong></p>
+<ul>
+<li><strong>表现</strong>：用Llama-3算的PPL，和用Qwen-2算的PPL，<strong>绝对数值完全不可比</strong>。Llama-3训练语料偏英语网页，算中文文本的PPL天然就高；而Qwen-2算中文的PPL会低很多。</li>
+<li><strong>后果</strong>：无法建立跨模型的统一PPL阈值，每次换基座都要重新标定，工程成本高。</li>
+</ul>
+<h4 id="工业界“进阶变种”"><a href="#工业界“进阶变种”" class="headerlink" title="工业界“进阶变种”"></a>工业界“进阶变种”</h4><p><strong>变种1：相对困惑度（Relative PPL）—— 解决“模型特异”</strong></p>
+<ul>
+<li><strong>做法</strong>：对每条待测数据 ( d )，计算其在基座模型上的PPL，同时计算该模型在<strong>一组通用基准语料（如C4验证集或维基百科）</strong>上的平均PPL ( PPL<em>{base} )，然后用<strong>比值</strong>作为分数：<br>[<br>Score = \frac{PPL(d)}{PPL</em>{base}}<br>]</li>
+<li><strong>优点</strong>：<ul>
+<li>对于不同模型的打分有了比较依据</li>
+<li>对于不同类型的文本也可以通过这种方法相互比较，例如对于数学语料，就找到数学的基准语料计算平均PPL，而日常日常对话则用日常对话的基准语料。</li>
+</ul>
+</li>
+</ul>
+<p><strong>变种2：分位数截断 + 分段采样（Quantile Truncation）—— 解决“分布偏好”</strong></p>
+<ul>
+<li><strong>做法</strong>：不设固定的PPL阈值（如“PPL&lt;20就保留”），而是<strong>对所有数据的PPL按升序排序，分成10个分位段（Decile）</strong>。然后<strong>从每个分位段中按比例采样</strong>，比如低分位（简单）采10%，中分位（适中）采40%，高分位（困难）采50%。</li>
+<li><strong>优点</strong>：显式保留了“困难样本”，让模型在训练时能看到高PPL的复杂表达，从而提升推理上限。</li>
+</ul>
+<p><strong>变种3：指令-答案分离动态加权（Dynamic Weighting）—— 解决“任务错配”</strong></p>
+<ul>
+<li><strong>做法</strong>：在SFT数据中，<strong>分别计算Instruction的PPL和Answer的PPL</strong>。如果Instruction PPL很高（说明指令本身生僻），而Answer PPL很低（答案流畅），这条数据可能是“高难度指令的优质回答”，应给予<strong>更高的采样权重</strong>；反之，如果Instruction很低但Answer很高，说明指令简单但回答胡言乱语，直接丢弃。</li>
+<li><strong>优点</strong>：把“问题难度”和“答案质量”解耦，能精准筛选出“带着脚镣跳好舞”的高质量数据。</li>
+</ul>
+<p><strong>变种4：分长度区间标准化——解决“长度敏感性”</strong></p>
+<ul>
+<li><strong>做法</strong>：把所有待测数据按长度（Token数）分桶，比如：<ul>
+<li>桶1：0 ~ 50 Token</li>
+<li>桶2：51 ~ 200 Token</li>
+<li>桶3：201 ~ 500 Token</li>
+<li>桶4：500+ Token</li>
+</ul>
+</li>
+</ul>
+<p>然后在<strong>每个桶内部，分别计算均值和标准差，做Z-Score标准化</strong>。</p>
+<p>[<br>\text{Norm_PPL} = \frac{PPL - \text{mean_PPL}<em>{bucket}}{\text{std_PPL}</em>{bucket}}<br>]</p>
+<ul>
+<li><strong>效果</strong>：一条500 Token的数学题PPL=80，它所在的“长文本桶”里平均PPL就是75，算出来Z-Score可能只有0.2，说明它在本长度区间里很正常；而一条10 Token的废话PPL=15，短文本桶里平均只有5，Z-Score高达2.0，反而被识别为异常。</li>
+</ul>
+<h4 id="第三层：致命陷阱——面试官最想听的“灾难场景”"><a href="#第三层：致命陷阱——面试官最想听的“灾难场景”" class="headerlink" title="第三层：致命陷阱——面试官最想听的“灾难场景”"></a>第三层：致命陷阱——面试官最想听的“灾难场景”</h4><p>让PPL完全失效的极端场景</p>
+<p><strong>陷阱1：数据污染（Contamination）—— PPL极低的“毒药”</strong></p>
+<ul>
+<li><strong>场景</strong>：如果你的待清洗数据里混入了<strong>GSM8K或MMLU的测试集</strong>，基座模型在预训练时已经见过这些题（哪怕只是相似表述），算出的PPL会<strong>异常低</strong>（比如只有2.0）。</li>
+<li><strong>后果</strong>：模型在训练时提前“看到”了测试集答案，导致评测分数虚高，上线后效果崩塌。</li>
+<li><strong>解法</strong>：这不是PPL能解决的问题，必须建立<strong>N-gram重叠检测</strong>（如13-gram完全匹配）和<strong>Embedding相似度阈值</strong>（如余弦相似度&gt;0.95则标记为污染）的黑名单库。</li>
+</ul>
+<p><strong>陷阱2：对抗性样本（Adversarial Examples）—— PPL极低的“废话连篇”</strong></p>
+<ul>
+<li><strong>场景</strong>：恶意构造一段“虽然XX，但是YY”的循环废话，比如“我不确定，但也许可能大概或许……”这种文本极其流畅，PPL低至3.0。</li>
+<li><strong>后果</strong>：模型学会输出“软绵绵”的回避式回答，失去决策力和确定感。</li>
+<li><strong>解法</strong>：引入<strong>熵（Entropy）</strong>指标——计算模型对每个Token预测概率分布的熵。如果PPL低但<strong>熵也极低</strong>，说明文本单一刻板，需要降权。</li>
+</ul>
+<h3 id="2-2-基于分类器的质量过滤（Classifier-based-Filtering）"><a href="#2-2-基于分类器的质量过滤（Classifier-based-Filtering）" class="headerlink" title="2.2 基于分类器的质量过滤（Classifier-based Filtering）"></a>2.2 基于分类器的质量过滤（Classifier-based Filtering）</h3><p>启发式规则只能过滤掉极端的低质量数据，而 PPL 主要衡量的是语言的流利度。为了剔除“流利但无营养/低价值”的内容（如营销号、垃圾网页、无意义的对话），通常会训练高质量的文本分类器。</p>
+<ul>
+<li><strong>1. 预训练数据分类器（如 FastText / 神经网络分类器）</strong><ul>
+<li><strong>原理</strong>：收集高质量数据集（如 Wikipedia、Books、精选学术论文等）作为正样本，收集低质数据集（如 Common Crawl 的随机抓取内容）作为负样本，训练一个文本分类器。</li>
+<li><strong>应用</strong>：给每条抓取的网页打分，设定阈值过滤掉低分文本。</li>
+</ul>
+</li>
+<li><strong>2. 领域/主题分类器</strong><ul>
+<li><strong>原理</strong>：根据模型的目标定位，训练分类器筛选出特定领域（如代码、数学、科学文献）的数据，或者剔除色情、暴力、仇恨言论等有害内容。</li>
+</ul>
+</li>
+<li><strong>3. GPT-4 蒸馏/打分（LLM-as-a-Judge）</strong><ul>
+<li>近年来流行用强大的模型（如 GPT-4）对候选数据进行打分或重写，或者训练小模型去拟合大模型的打分标准（如 LLaMA-Clean 等工作）。</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h2 id="三、去重（Deduplication）——-核心环节"><a href="#三、去重（Deduplication）——-核心环节" class="headerlink" title="三、去重（Deduplication）—— 核心环节"></a>三、去重（Deduplication）—— 核心环节</h2><p>大模型对重复数据极其敏感。重复数据会导致模型过拟合、降低多样性，甚至在预训练时引发记忆效应。去重通常分为三个粒度：</p>
+<ul>
+<li><strong>1. 完全去重（Exact Deduplication）</strong><ul>
+<li>利用基础哈希算法（如 MD5、SHA-256）对整篇文档或段落计算哈希值，精准剔除一字不差的重复文档。</li>
+</ul>
+</li>
+<li><strong>2. 句子/段落级去重</strong><ul>
+<li>剔除文档内部或跨文档的大面积雷同段落（常见于网站的统一导航栏、页脚版权声明等）。</li>
+</ul>
+</li>
+<li><strong>3. 模糊去重（Fuzzy Deduplication）—— 重点</strong><ul>
+<li><strong>背景</strong>：网络上存在大量“洗稿”或微调的重复内容（字面不完全一样，但语义/内容高度重合）。</li>
+<li><strong>主流技术</strong>：<ul>
+<li><strong>MinHash + LSH (Locality-Sensitive Hashing)</strong>：先利用 MinHash 将文本转化为签名，再利用 LSH 高效分桶捞出候选文档，最后在桶内通过杰卡德相似度进行精确校验与剪裁。</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+<blockquote>
+<p>MinHash + LSH法：</p>
+<ul>
+<li>Shingling (N-gram)：将文本分为N-grams，输出v_size×doc_num的矩阵（one-hot矩阵）</li>
+<li>MinHash：计算N-grams的MinHash值（对每一列随机打乱，第一个出现1的行作为MinHash值，重复n次）</li>
+<li>LSH：对每个文档的minihash进行切割，然后使用hash的方法对比每个文章的每一段hash，只有存在任意一段hash相同，则认为这两个文档是同一个桶中的文本</li>
+</ul>
+</blockquote>
+<hr>
+<h2 id="四、-隐私与敏感信息脱敏（Privacy-amp-PII-Removal）"><a href="#四、-隐私与敏感信息脱敏（Privacy-amp-PII-Removal）" class="headerlink" title="四、 隐私与敏感信息脱敏（Privacy &amp; PII Removal）"></a>四、 隐私与敏感信息脱敏（Privacy &amp; PII Removal）</h2><p>为了符合法律法规（如 GDPR）并保护个人隐私，必须在数据清洗阶段移除敏感的个人身份信息（PII, Personally Identifiable Information）。</p>
+<ul>
+<li><strong>识别与替换</strong>：<ul>
+<li>利用正则表达式（Regex）或专用的 NER（命名实体识别）模型，检测并替换/抹去文本中的：<ul>
+<li>手机号码、电子邮箱、身份证号、银行卡号。</li>
+<li>具体的人名、详细住址、IP 地址等。</li>
+</ul>
+</li>
+</ul>
+</li>
+<li><strong>API 密钥与密码过滤</strong>：<ul>
+<li>针对代码和技术文档，过滤掉硬编码的 API 密钥、私钥（如 SSH Key、GitHub Token）和密码。</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h1 id="数据合成（Data-Synthesis）"><a href="#数据合成（Data-Synthesis）" class="headerlink" title="数据合成（Data Synthesis）"></a>数据合成（Data Synthesis）</h1><h2 id="一、-指令生成（Instruction-Generation）"><a href="#一、-指令生成（Instruction-Generation）" class="headerlink" title="一、 指令生成（Instruction Generation）"></a>一、 指令生成（Instruction Generation）</h2><p>最开始我们只会拿到一些文本，而没有“问题-回答”对数据</p>
+<h3 id="1-1-Evol-Instruct（进化指令-——-《WizardLM》核心）"><a href="#1-1-Evol-Instruct（进化指令-——-《WizardLM》核心）" class="headerlink" title="1.1 Evol-Instruct（进化指令 —— 《WizardLM》核心）"></a>1.1 Evol-Instruct（进化指令 —— 《WizardLM》核心）</h3><ul>
+<li><strong>核心逻辑</strong>：模仿人类老师出题的思路，把简单的问题一步步改造成高难度、复杂逻辑的题目。</li>
+<li><strong>两大演化方向</strong>：<ul>
+<li><strong>深度演化（Deepening）</strong>：增加约束条件、加深推理步骤、提高任务复杂度、引入模糊或对抗性条件。</li>
+<li><strong>广度演化（Broadening）</strong>：改变主题、领域或任务类型，实现数据的多样化（例如把“写一首关于春天的诗”演化为“写一首关于量子力学的十四行诗”）。</li>
+</ul>
+</li>
+<li><strong>实施方式</strong>：让强大的模型（如 GPT-4）扮演“出题人”，按照演化 Prompt 不断对种子指令进行多轮迭代升级，淘汰掉无法解析或生成的死局，保留有效的高难度指令。</li>
+</ul>
+<h3 id="2-Self-Instruct（自举指令生成）"><a href="#2-Self-Instruct（自举指令生成）" class="headerlink" title="2. Self-Instruct（自举指令生成）"></a>2. Self-Instruct（自举指令生成）</h3><ul>
+<li><strong>核心逻辑</strong>：由王树森老师、苏剑林等推崇的自动化方案（源自斯坦福 Self-Instruct 论文）。</li>
+<li><strong>实施步骤</strong>：<ol>
+<li>准备极少量的种子任务（例如 175 个人工编写的指令）。</li>
+<li>让大模型随机参考几个种子，自主“凭空想象”生成新的指令。</li>
+<li><strong>质量过滤</strong>：利用启发式规则和模型自身能力，剔除与已有指令重复度过高、语法错误、或无法回答的低质量指令。</li>
+<li>将新生成的优质指令加入种子池，循环迭代，像滚雪球一样扩充指令集。</li>
+</ol>
+</li>
+</ul>
+<h2 id="二、-答案生成与增强（Response-Generation）"><a href="#二、-答案生成与增强（Response-Generation）" class="headerlink" title="二、 答案生成与增强（Response Generation）"></a>二、 答案生成与增强（Response Generation）</h2><p>有了指令后，需要为其生成高质量的“标准答案”。业界早已不满足于单次生成，而是采用组合拳来拔高答案质量：</p>
+<h3 id="1-多模型投票与-Best-of-N-采样"><a href="#1-多模型投票与-Best-of-N-采样" class="headerlink" title="1. 多模型投票与 Best-of-N 采样"></a>1. 多模型投票与 Best-of-N 采样</h3><ul>
+<li><strong>多样性采样</strong>：对同一条指令，使用不同的温度参数（$Temperature &gt; 0.7$）让模型生成多个不同的回答，或者调用多个不同的基座模型（如 GPT-4、Claude-3.5、Llama-3）同时作答。</li>
+<li><strong>Best-of-N 选优</strong>：生成 $N$ 个候选答案后，利用一个经过训练的<strong>奖励模型（Reward Model）</strong>或更强的裁判模型（LLM-as-a-Judge）对这 $N$ 个答案进行评分打分，挑选出分数最高的那一个作为最终答案。</li>
+</ul>
+<h3 id="2-Chain-of-Thought（CoT）思维链合成"><a href="#2-Chain-of-Thought（CoT）思维链合成" class="headerlink" title="2. Chain-of-Thought（CoT）思维链合成"></a>2. Chain-of-Thought（CoT）思维链合成</h3><ul>
+<li><strong>针对复杂推理题</strong>（如数学、代码、逻辑推理）：仅仅给出一个最终答案是不够的，模型需要学会“思考过程”。</li>
+<li><strong>实施方式</strong>：在 Prompt 中显式引导模型逐步推理（例如：“Let’s think step by step”），并要求其输出带结构化标签的推理步骤（如 <code>&lt;step&gt; 第一步... &lt;/step&gt; &lt;step&gt; 第二步... &lt;/step&gt;</code>），这能大幅提升模型在复杂任务上的表现。</li>
+</ul>
+<hr>
+<h2 id="三、-偏好数据（Preference-Data）合成"><a href="#三、-偏好数据（Preference-Data）合成" class="headerlink" title="三、 偏好数据（Preference Data）合成"></a>三、 偏好数据（Preference Data）合成</h2><p>大模型不仅要学会正确回答，还要懂得人类的偏好（如更礼貌、更安全、更简洁）。目前主流的对齐算法（如 DPO、RLHF）极度依赖 <strong>Chosen（优选）/ Rejected（劣选）</strong> 形式的偏好对。</p>
+<h3 id="1-RLAIF（AI-反馈强化学习）"><a href="#1-RLAIF（AI-反馈强化学习）" class="headerlink" title="1. RLAIF（AI 反馈强化学习）"></a>1. RLAIF（AI 反馈强化学习）</h3><ul>
+<li><strong>背景</strong>：传统 RLHF 需要大量人类标注员对答案排序，成本高且周期长。</li>
+<li><strong>做法</strong>：用最强大的模型（如 GPT-4）作为裁判，让它同时审阅对同一个问题的两个不同回答，并给出倾向性判断（指出哪个回答更好，并说明理由），从而自动化构建大规模偏好数据集。</li>
+</ul>
+<h3 id="2-负面构造（Negative-Construction）"><a href="#2-负面构造（Negative-Construction）" class="headerlink" title="2. 负面构造（Negative Construction）"></a>2. 负面构造（Negative Construction）</h3><ul>
+<li><strong>主动制造“反面教材”</strong>：为了让模型学会避坑，我们会刻意引导模型或通过技术手段生成劣质回复（Rejected 样本），常见手段包括：<ul>
+<li><strong>幻觉注入</strong>：让模型加入虚假的事实。</li>
+<li><strong>超长/啰嗦</strong>：故意让回答包含大量车轱辘话。</li>
+<li><strong>逻辑谬误</strong>：在推理中加入错误的中间步骤。</li>
+<li>将这些作为 Rejected，与正确的 Chosen 组成训练对，训练出的模型逻辑会更加严密。</li>
+</ul>
+</li>
+</ul>
+<hr>
+<h2 id="四、-数据回译（Back-translation）"><a href="#四、-数据回译（Back-translation）" class="headerlink" title="四、 数据回译（Back-translation）"></a>四、 数据回译（Back-translation）</h2><ul>
+<li><strong>跨语言能力扩充</strong>：由于互联网上高质量的中文语料相对英文较少，大厂常利用数据回译技术。</li>
+<li><strong>流程</strong>：将海量高质量的英文网页、科学文献或代码注释，通过机器翻译（或大模型翻译）高质量地转化为中文，再结合回译校验（中文再翻译回英文比对语义损耗），从而低成本扩充多语言大模型的训练语料库。</li>
+</ul>
+<hr>
+<h3 id="💡-工业界合成数据流水线总结"><a href="#💡-工业界合成数据流水线总结" class="headerlink" title="💡 工业界合成数据流水线总结"></a>💡 工业界合成数据流水线总结</h3><p>现代大模型的数据合成已经形成了一套<strong>“生产 $\rightarrow$ 过滤 $\rightarrow$ 增强 $\rightarrow$ 对齐”</strong>的工业化闭环：</p>
+<ol>
+<li><strong>种子驱动</strong>：少量高质量人工种子 + 进化/自举算法（Evol/Self-Instruct）。</li>
+<li><strong>多源并发</strong>：多模型、多温度采样生成候选。</li>
+<li><strong>AI 裁判过滤</strong>：用强模型打分、去噪、过滤低质量和有害内容。</li>
+<li><strong>对齐打包</strong>：构建包含 CoT 推理和 Chosen/Rejected 偏好的最终训练集。</li>
+</ol>
+</article><div class="post-copyright"><div class="post-copyright__author"><span class="post-copyright-meta"><i class="fas fa-circle-user fa-fw"></i>Author: </span><span class="post-copyright-info"><a href="https://duqi666.github.io">Mercik</a></span></div><div class="post-copyright__type"><span class="post-copyright-meta"><i class="fas fa-square-arrow-up-right fa-fw"></i>Link: </span><span class="post-copyright-info"><a href="https://duqi666.github.io/2026/07/25/%E6%95%B0%E6%8D%AE%E5%90%88%E6%88%90%E5%92%8C%E6%B8%85%E6%B4%97/">https://duqi666.github.io/2026/07/25/%E6%95%B0%E6%8D%AE%E5%90%88%E6%88%90%E5%92%8C%E6%B8%85%E6%B4%97/</a></span></div><div class="post-copyright__notice"><span class="post-copyright-meta"><i class="fas fa-circle-exclamation fa-fw"></i>Copyright Notice: </span><span class="post-copyright-info">All articles on this blog are licensed under <a target="_blank" rel="noopener" href="https://creativecommons.org/licenses/by-nc-sa/4.0/">CC BY-NC-SA 4.0</a> unless otherwise stated.</span></div></div><div class="tag_share"><div class="post-meta__tag-list"><a class="post-meta__tags" href="/tags/%E7%AE%97%E6%B3%95/">算法</a><a class="post-meta__tags" href="/tags/%E5%A4%A7%E6%A8%A1%E5%9E%8B/">大模型</a><a class="post-meta__tags" href="/tags/%E5%AD%A6%E4%B9%A0/">学习</a><a class="post-meta__tags" href="/tags/%E6%95%B0%E6%8D%AE%E5%A4%84%E7%90%86/">数据处理</a></div><div class="post-share"><div class="social-share" data-image="/imgs/I.png" data-sites="facebook,twitter,wechat,weibo,qq"></div><link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/css/share.min.css" media="print" onload="this.media='all'"><script src="https://cdn.jsdelivr.net/npm/butterfly-extsrc/sharejs/dist/js/social-share.min.js" defer></script></div></div><nav class="pagination-post" id="pagination"><a class="pagination-related" href="/2026/07/25/%E6%A8%A1%E5%9E%8B%E8%92%B8%E9%A6%8F/" title="模型蒸馏"><div class="cover" style="background: var(--default-bg-color)"></div><div class="info"><div class="info-1"><div class="info-item-1">Previous</div><div class="info-item-2">模型蒸馏</div></div><div class="info-2"><div class="info-item-1">   模型蒸馏（Model Distillation），通常更准确地称为知识蒸馏（Knowledge Distillation, KD），是深度学习领域中一项核心的模型压缩与加速技术。 核心思想：通过一个训练好、性能强大但体型庞大的“教师模型（Teacher Model）”，去指导一个体积较小、结构轻量化的“学生模型（Student Model）”进行训练，让学生模型在保持较高准确率的同时，大幅减少参数量和推理计算开销。 一、暗知识在传统的机器学习中，模型通常只向硬标签（Hard Labels，如独热编码 One-Hot）学习：  例如，一张猫的照片，硬标签是：猫 = 1.0, 狗 = 0.0, 汽车 = 0.0。  然而，预训练的教师模型在输出分类概率时，会产生包含丰富信息的软标签（Soft Labels），Hinton 将其称为“暗知识（Dark Knowledge）”：  例如，教师模型对同一张猫的照片预测可能是：猫 = 85%, 狗 = 14.8%, 汽车 = 0.2%。  这些“次要类别”的非零概率（如猫和狗有相似的毛发、四肢特征）揭示了类别之间的相似性和数据的内在结构...</div></div></div></a><a class="pagination-related" href="/2026/07/22/MLA/" title="MLA（Multi-head Latent Attention）"><img class="cover" src="/imgs/MLA.png" onerror="onerror=null;src='/img/404.jpg'" alt="cover of next post"><div class="info text-right"><div class="info-1"><div class="info-item-1">Next</div><div class="info-item-2">MLA（Multi-head Latent Attention）</div></div><div class="info-2"><div class="info-item-1">  MLA（Multi-head Latent Attention）详细介绍MLA（Multi-head Latent Attention）是 DeepSeek-V2/V3 中提出的核心架构创新，其本质是通过低秩压缩和解耦位置编码来大幅降低推理时的 KV Cache 开销。以下严格遵循原论文的符号体系进行介绍。 1. 核心思想：低秩压缩标准 MHA 中，每个 token 需要缓存完整的 Key 和 Value，维度为 (2 n_h d_h)。MLA 的核心改动是引入一个低维的联合潜向量 (\mathbf{c}_t^{KV}) 来替代它们。 压缩过程对于第 (t) 个 token 的输入 (\mathbf{h}_t \in \mathbb{R}^{d})，首先通过一个下投影矩阵将其压缩为低维潜向量： [\mathbf{c}_t^{KV} = W^{DKV} \mathbf{h}_t \tag{41}] 其中，(W^{DKV} \in \mathbb{R}^{d_c \times d})，(d_c) 是 KV 压缩维度，远小于 (n_h d_h)。在推理时，我们只需要缓存这个 (\m...</div></div></div></a></nav><div class="relatedPosts"><div class="headline"><i class="fas fa-thumbs-up fa-fw"></i><span>Related Articles</span></div><div class="relatedPosts-list"><a class="pagination-related" href="/2026/06/27/Agentic-RL/" title="Agentic-RL"><img class="cover" src="/imgs/Flash-Attention.jpg" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2026-06-27</div><div class="info-item-2">Agentic-RL</div></div><div class="info-2"><div class="info-item-1">   </div></div></div></a><a class="pagination-related" href="/2025/10/25/Flash-Attention/" title="Flash-Attention算法"><img class="cover" src="/imgs/Flash-Attention.jpg" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-10-25</div><div class="info-item-2">Flash-Attention算法</div></div><div class="info-2"><div class="info-item-1">  前言学Flash-Attention算法的主要契机是最近在工作中遇到了进行长文本训练时的OOM（Out of Memory）问题，在训练时使用Flash-Attention是尝试过的有效的方法之一，所以就想学一下这个算法的原理。 Paper: https://arxiv.org/pdf/2205.14135 参考：https://www.zhihu.com/question/611236756/answer/3132304304 背景传统的transformer算法中，对于self-attention的计算是一个比较费时费空间的做法，其存储复杂度是输入文本长度的平方复杂度，所以当输入序列变得很长时训练速度会变得比较慢，且存在OOM的风险，当前许多研究工作着重于减小self-attention的计算复杂度以加快训练速度，减小显存占用。 FlashAttention主要解决Transformer计算速度慢和存储占用高的问题。但与绝大多数Efficient Transformer把改进方法集中在降低模型的FLOPS（floating point operations per sec...</div></div></div></a><a class="pagination-related" href="/2026/06/22/GraphRAG/" title="GraphRAG"><img class="cover" src="/imgs/GraphRAG.jpg" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2026-06-22</div><div class="info-item-2">GraphRAG</div></div><div class="info-2"><div class="info-item-1">   一、核心模式1、混合检索与双路召回（Hybrid Retrieval）通过用户的输入做两步查询并融合  文本向量路（Dense Retrieval）： 计算用户问题与原始文本 Chunk 的 Embedding 相似度，捞出相关的上下文。  图谱实体路（Graph Retrieval）：   提取问题中的核心实体（如上一节提到的 LLM 或小模型 NER）。 去图数据库（如 Neo4j、NebulaGraph）中，捞取该实体周围 1跳（1-hop）或 2跳（2-hop） 的所有三元组（如属性和邻居节点）。   重排融合（Reranking）： 使用 混合交叉编码器（Cross-Encoder Reranking） 或 RRF（倒数排名融合），把向量块和三元组拼在一起重新打分，挑出含金量最高的 Top-K 内容喂给 LLM。  2、Text-to-Cypher / Text-to-SubGraph（大模型生成查询）当面临复杂的多跳逻辑推理（例如：“提取出所有由李彦宏投资、且总部在上海的医疗健康领域公司的名字”）时，直接靠向量匹配会彻底失效。目前的主流是让 LLM 充当翻译官。...</div></div></div></a><a class="pagination-related" href="/2026/06/14/KV-cache/" title="KV cache"><img class="cover" src="/imgs/KV_cache.jpg" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2026-06-14</div><div class="info-item-2">KV cache</div></div><div class="info-2"><div class="info-item-1">Why KV cache?大语言模型的自回归（Autoregressive）生成有一个特点：逐字（Token）输出。每次生成下一个 Token 时，模型都需要计算当前 Token 与之前所有 Token 的注意力（Attention）关系。 没有KV cache的情况例如，当输入 “The cat sat on” 时，模型为了预测下一个词，需要计算这 4 个词的 $Q, K, V$ 矩阵。 举例：对于Decoder-only模型的推理场景，假设输入 “The cat sat on”，希望输出下一个词 “the”。 step1：  首先计算这 4 个词的 $K, V$ 矩阵 计算”on”的 $Q$ 矩阵（其实4个词的$Q$矩阵都被计算出来了，这是由于底层采用的是矩阵运算，但是实际使用的只有”on”的$Q$矩阵） 以 “The cat sat on”的 $K, V$ 矩阵为基准，计算”on”的$Q$ 矩阵与 $K$ 矩阵的注意力矩阵 输出“the”  当前状态：“The cat sat on the”  计算“The cat sat on the”的 $K, V$ 矩阵 计算”the...</div></div></div></a><a class="pagination-related" href="/2026/07/26/SwiGLU/" title="SwiGLU"><img class="cover" src="/imgs/Deepsepeed%20Zero.jpg" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2026-07-26</div><div class="info-item-2">SwiGLU</div></div><div class="info-2"><div class="info-item-1">  SwiGLU（Swish-Gated Linear Unit）是一种在现代大语言模型（如 LLaMA、PaLM、Mistral 等）中被广泛采用的高性能激活函数。它结合了 Swish 激活函数（也称为 SiLU）和 GLU（门控线性单元，Gated Linear Unit） 的思想，能够显著提升神经网络的表达能力和模型训练效果。   一、 SwiGLU 的数学定义给定输入向量 $x$ 和两个可学习的权重矩阵 $W, V$（以及可选的偏置项），SwiGLU 的计算过程可以分为门控和激活两步：  门控线性单元（GLU）的核心思想：让一部分网络输出作为“门（Gate）”，去控制另一部分信息的通过率。 公式表达： \text{SwiGLU}(x) = \text{Swish}_\beta(xW) \otimes (xV)其中：  $\otimes$ 表示按元素相乘（Hadamard product）。 $xW$ 和 $xV$ 是通过线性变换得到的两个特征向量。 $\text{Swish}_\beta(x)$ 是基础的 Swish 激活函数，定义为：\text{Swish}_\beta...</div></div></div></a><a class="pagination-related" href="/2025/10/27/ZeRO3/" title="DeepSpeed ZeRO技术"><img class="cover" src="/imgs/Deepsepeed%20Zero.jpg" alt="cover"><div class="info text-center"><div class="info-1"><div class="info-item-1"><i class="far fa-calendar-alt fa-fw"></i> 2025-10-27</div><div class="info-item-2">DeepSpeed ZeRO技术</div></div><div class="info-2"><div class="info-item-1">   前言参考：https://www.bilibili.com/video/BV1mm42137X8/?spm_id_from=333.337.search-card.all.click&amp;vd_source=47a89074dbbb4a7c1909efaecd754e32 看视频吧，视频说的比我写的好…  </div></div></div></a></div></div><hr class="custom-hr"/><div id="post-comment"><div class="comment-head"><div class="comment-headline"><i class="fas fa-comments fa-fw"></i><span> Comments</span></div></div><div class="comment-wrap"><div><div class="vcomment" id="vcomment"></div></div></div></div></div><div class="aside-content" id="aside-content"><div class="card-widget card-info text-center"><div class="avatar-img"><img src="/imgs/I.png" onerror="this.onerror=null;this.src='/img/friend_404.gif'" alt="avatar"/></div><div class="author-info-name">Mercik</div><div class="author-info-description"></div><div class="site-data"><a href="/archives/"><div class="headline">Articles</div><div class="length-num">33</div></a><a href="/tags/"><div class="headline">Tags</div><div class="length-num">23</div></a><a href="/categories/"><div class="headline">Categories</div><div class="length-num">14</div></a></div><a id="card-info-btn" target="_blank" rel="noopener" href="https://github.com/Duqi666"><i class="fab fa-github"></i><span>Follow Me</span></a></div><div class="card-widget card-announcement"><div class="item-headline"><i class="fas fa-bullhorn fa-shake"></i><span>Announcement</span></div><div class="announcement_content">Welcome to Merick's Blog!</div><div class="announcement-image"><img src="/imgs/cat.gif" alt="gif" loading="lazy"/></div></div><div class="sticky_layout"><div class="card-widget" id="card-toc"><div class="item-headline"><i class="fas fa-stream"></i><span>Contents</span><span class="toc-percentage"></span></div><div class="toc-content"><ol class="toc"><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%95%B0%E6%8D%AE%E6%B8%85%E6%B4%97"><span class="toc-number">1.</span> <span class="toc-text">数据清洗</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%80%E3%80%81%E5%90%AF%E5%8F%91%E5%BC%8F%E8%A7%84%E5%88%99%E8%BF%87%E6%BB%A4"><span class="toc-number">1.1.</span> <span class="toc-text">一、启发式规则过滤</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%8C%E3%80%81%E8%B4%A8%E9%87%8F%E8%AF%84%E4%BC%B0%E8%BF%87%E6%BB%A4"><span class="toc-number">1.2.</span> <span class="toc-text">二、质量评估过滤</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#2-1-%E5%9B%B0%E6%83%91%E5%BA%A6%EF%BC%88PPL%EF%BC%89%E8%BF%87%E6%BB%A4%E2%80%94-%E9%87%8D%E7%82%B9"><span class="toc-number">1.2.1.</span> <span class="toc-text">2.1 困惑度（PPL）过滤—-重点</span></a><ol class="toc-child"><li class="toc-item toc-level-4"><a class="toc-link" href="#PPL%E7%9A%84%E4%B8%89%E5%A4%A7%E5%85%88%E5%A4%A9%E7%BC%BA%E9%99%B7%EF%BC%88%E6%95%B0%E5%AD%A6%E6%9C%AC%E8%B4%A8%E4%B8%8A%E7%9A%84%E2%80%9C%E7%9B%B2%E5%8C%BA%E2%80%9D%EF%BC%89"><span class="toc-number">1.2.1.1.</span> <span class="toc-text">PPL的三大先天缺陷（数学本质上的“盲区”）</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E5%B7%A5%E4%B8%9A%E7%95%8C%E2%80%9C%E8%BF%9B%E9%98%B6%E5%8F%98%E7%A7%8D%E2%80%9D"><span class="toc-number">1.2.1.2.</span> <span class="toc-text">工业界“进阶变种”</span></a></li><li class="toc-item toc-level-4"><a class="toc-link" href="#%E7%AC%AC%E4%B8%89%E5%B1%82%EF%BC%9A%E8%87%B4%E5%91%BD%E9%99%B7%E9%98%B1%E2%80%94%E2%80%94%E9%9D%A2%E8%AF%95%E5%AE%98%E6%9C%80%E6%83%B3%E5%90%AC%E7%9A%84%E2%80%9C%E7%81%BE%E9%9A%BE%E5%9C%BA%E6%99%AF%E2%80%9D"><span class="toc-number">1.2.1.3.</span> <span class="toc-text">第三层：致命陷阱——面试官最想听的“灾难场景”</span></a></li></ol></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-2-%E5%9F%BA%E4%BA%8E%E5%88%86%E7%B1%BB%E5%99%A8%E7%9A%84%E8%B4%A8%E9%87%8F%E8%BF%87%E6%BB%A4%EF%BC%88Classifier-based-Filtering%EF%BC%89"><span class="toc-number">1.2.2.</span> <span class="toc-text">2.2 基于分类器的质量过滤（Classifier-based Filtering）</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%89%E3%80%81%E5%8E%BB%E9%87%8D%EF%BC%88Deduplication%EF%BC%89%E2%80%94%E2%80%94-%E6%A0%B8%E5%BF%83%E7%8E%AF%E8%8A%82"><span class="toc-number">1.3.</span> <span class="toc-text">三、去重（Deduplication）—— 核心环节</span></a></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%9B%9B%E3%80%81-%E9%9A%90%E7%A7%81%E4%B8%8E%E6%95%8F%E6%84%9F%E4%BF%A1%E6%81%AF%E8%84%B1%E6%95%8F%EF%BC%88Privacy-amp-PII-Removal%EF%BC%89"><span class="toc-number">1.4.</span> <span class="toc-text">四、 隐私与敏感信息脱敏（Privacy &amp; PII Removal）</span></a></li></ol></li><li class="toc-item toc-level-1"><a class="toc-link" href="#%E6%95%B0%E6%8D%AE%E5%90%88%E6%88%90%EF%BC%88Data-Synthesis%EF%BC%89"><span class="toc-number">2.</span> <span class="toc-text">数据合成（Data Synthesis）</span></a><ol class="toc-child"><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%80%E3%80%81-%E6%8C%87%E4%BB%A4%E7%94%9F%E6%88%90%EF%BC%88Instruction-Generation%EF%BC%89"><span class="toc-number">2.1.</span> <span class="toc-text">一、 指令生成（Instruction Generation）</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-1-Evol-Instruct%EF%BC%88%E8%BF%9B%E5%8C%96%E6%8C%87%E4%BB%A4-%E2%80%94%E2%80%94-%E3%80%8AWizardLM%E3%80%8B%E6%A0%B8%E5%BF%83%EF%BC%89"><span class="toc-number">2.1.1.</span> <span class="toc-text">1.1 Evol-Instruct（进化指令 —— 《WizardLM》核心）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-Self-Instruct%EF%BC%88%E8%87%AA%E4%B8%BE%E6%8C%87%E4%BB%A4%E7%94%9F%E6%88%90%EF%BC%89"><span class="toc-number">2.1.2.</span> <span class="toc-text">2. Self-Instruct（自举指令生成）</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%BA%8C%E3%80%81-%E7%AD%94%E6%A1%88%E7%94%9F%E6%88%90%E4%B8%8E%E5%A2%9E%E5%BC%BA%EF%BC%88Response-Generation%EF%BC%89"><span class="toc-number">2.2.</span> <span class="toc-text">二、 答案生成与增强（Response Generation）</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-%E5%A4%9A%E6%A8%A1%E5%9E%8B%E6%8A%95%E7%A5%A8%E4%B8%8E-Best-of-N-%E9%87%87%E6%A0%B7"><span class="toc-number">2.2.1.</span> <span class="toc-text">1. 多模型投票与 Best-of-N 采样</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-Chain-of-Thought%EF%BC%88CoT%EF%BC%89%E6%80%9D%E7%BB%B4%E9%93%BE%E5%90%88%E6%88%90"><span class="toc-number">2.2.2.</span> <span class="toc-text">2. Chain-of-Thought（CoT）思维链合成</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E4%B8%89%E3%80%81-%E5%81%8F%E5%A5%BD%E6%95%B0%E6%8D%AE%EF%BC%88Preference-Data%EF%BC%89%E5%90%88%E6%88%90"><span class="toc-number">2.3.</span> <span class="toc-text">三、 偏好数据（Preference Data）合成</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#1-RLAIF%EF%BC%88AI-%E5%8F%8D%E9%A6%88%E5%BC%BA%E5%8C%96%E5%AD%A6%E4%B9%A0%EF%BC%89"><span class="toc-number">2.3.1.</span> <span class="toc-text">1. RLAIF（AI 反馈强化学习）</span></a></li><li class="toc-item toc-level-3"><a class="toc-link" href="#2-%E8%B4%9F%E9%9D%A2%E6%9E%84%E9%80%A0%EF%BC%88Negative-Construction%EF%BC%89"><span class="toc-number">2.3.2.</span> <span class="toc-text">2. 负面构造（Negative Construction）</span></a></li></ol></li><li class="toc-item toc-level-2"><a class="toc-link" href="#%E5%9B%9B%E3%80%81-%E6%95%B0%E6%8D%AE%E5%9B%9E%E8%AF%91%EF%BC%88Back-translation%EF%BC%89"><span class="toc-number">2.4.</span> <span class="toc-text">四、 数据回译（Back-translation）</span></a><ol class="toc-child"><li class="toc-item toc-level-3"><a class="toc-link" href="#%F0%9F%92%A1-%E5%B7%A5%E4%B8%9A%E7%95%8C%E5%90%88%E6%88%90%E6%95%B0%E6%8D%AE%E6%B5%81%E6%B0%B4%E7%BA%BF%E6%80%BB%E7%BB%93"><span class="toc-number">2.4.1.</span> <span class="toc-text">💡 工业界合成数据流水线总结</span></a></li></ol></li></ol></li></ol></div></div><div class="card-widget card-recent-post"><div class="item-headline"><i class="fas fa-history"></i><span>Recent Posts</span></div><div class="aside-list"><div class="aside-list-item"><a class="thumbnail" href="/2026/08/06/MTP/" title="MTP"><img src="/imgs/MTP.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="MTP"/></a><div class="content"><a class="title" href="/2026/08/06/MTP/" title="MTP">MTP</a><time datetime="2026-08-06T10:32:41.518Z" title="Created 2026-08-06 18:32:41">2026-08-06</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2026/07/26/SwiGLU/" title="SwiGLU"><img src="/imgs/Deepsepeed%20Zero.jpg" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="SwiGLU"/></a><div class="content"><a class="title" href="/2026/07/26/SwiGLU/" title="SwiGLU">SwiGLU</a><time datetime="2026-07-26T04:57:18.637Z" title="Created 2026-07-26 12:57:18">2026-07-26</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2026/07/25/%E6%A8%A1%E5%9E%8B%E8%92%B8%E9%A6%8F/" title="模型蒸馏">模型蒸馏</a><time datetime="2026-07-25T12:11:13.408Z" title="Created 2026-07-25 20:11:13">2026-07-25</time></div></div><div class="aside-list-item no-cover"><div class="content"><a class="title" href="/2026/07/25/%E6%95%B0%E6%8D%AE%E5%90%88%E6%88%90%E5%92%8C%E6%B8%85%E6%B4%97/" title="数据合成和清洗">数据合成和清洗</a><time datetime="2026-07-25T04:40:01.186Z" title="Created 2026-07-25 12:40:01">2026-07-25</time></div></div><div class="aside-list-item"><a class="thumbnail" href="/2026/07/22/MLA/" title="MLA（Multi-head Latent Attention）"><img src="/imgs/MLA.png" onerror="this.onerror=null;this.src='/img/404.jpg'" alt="MLA（Multi-head Latent Attention）"/></a><div class="content"><a class="title" href="/2026/07/22/MLA/" title="MLA（Multi-head Latent Attention）">MLA（Multi-head Latent Attention）</a><time datetime="2026-07-22T13:20:28.619Z" title="Created 2026-07-22 21:20:28">2026-07-22</time></div></div></div></div></div></div></main><footer id="footer"><div class="footer-other"><div class="footer-copyright"><span class="copyright">&copy;&nbsp;2025 - 2026 By Mercik</span></div><div class="footer_custom_text">I wish you to become your own sun, no need to rely on who's light.</div></div></footer></div><div id="rightside"><div id="rightside-config-hide"><button id="readmode" type="button" title="Reading Mode"><i class="fas fa-book-open"></i></button><button id="darkmode" type="button" title="Toggle Between Light and Dark Mode"><i class="fas fa-adjust"></i></button><button id="hide-aside-btn" type="button" title="Toggle Between Single-column and Double-column"><i class="fas fa-arrows-alt-h"></i></button></div><div id="rightside-config-show"><button id="rightside-config" type="button" title="Settings"><i class="fas fa-cog fa-spin"></i></button><button class="close" id="mobile-toc-button" type="button" title="Table of Contents"><i class="fas fa-list-ul"></i></button><a id="to_comment" href="#post-comment" title="Scroll to Comments"><i class="fas fa-comments"></i></a><button id="go-up" type="button" title="Back to Top"><span class="scroll-percent"></span><i class="fas fa-arrow-up"></i></button></div></div><div><script src="/js/utils.js"></script><script src="/js/main.js"></script><div class="js-pjax"><script>(() => {
+  const isShuoshuo = GLOBAL_CONFIG_SITE.pageType === 'shuoshuo'
+  const option = null
+
+  const initValine = (el, path) => {
+    if (isShuoshuo) {
+      window.shuoshuoComment.destroyValine = () => {
+        if (el.children.length) {
+          el.innerHTML = ''
+          el.classList.add('no-comment')
+        }
+      }
+    }
+
+    const valineConfig = {
+      el: '#vcomment',
+      appId: 'uu6tSxmBoCndulFYKGKobx2L-MdYXbMMI',
+      appKey: 'jBho9VeFfJwBsfbRDlg0zM6B',
+      avatar: '',
+      serverURLs: 'https://uu6tsxmb.api.lncldglobal.com',
+      emojiMaps: "",
+      visitor: false,
+      ...option,
+      path: isShuoshuo ? path : (option && option.path) || window.location.pathname
+    }
+
+    new Valine(valineConfig)
+  }
+
+  const loadValine = async (el, path) => {
+    if (typeof Valine === 'function') {
+      initValine(el, path)
+    } else {
+      await btf.getScript('https://cdn.jsdelivr.net/npm/valine/dist/Valine.min.js')
+      initValine(el, path)
+    }
+  }
+
+  if (isShuoshuo) {
+    'Valine' === 'Valine'
+      ? window.shuoshuoComment = { loadComment: loadValine }
+      : window.loadOtherComment = loadValine
+    return
+  }
+
+  if ('Valine' === 'Valine' || !false) {
+    if (false) btf.loadComment(document.getElementById('vcomment'),loadValine)
+    else setTimeout(loadValine, 0)
+  } else {
+    window.loadOtherComment = loadValine
+  }
+})()</script></div><script src="/js/custom.js"></script><script src="/js/mode_change.js"></script><canvas id="universe"></canvas><script defer src="/js/universe.js"></script><script defer src="https://npm.elemecdn.com/jquery@latest/dist/jquery.min.js"></script><script defer data-pjax src="/js/cat.js"></script><script type="text/javascript" src="https://unpkg.zhimg.com/jquery@latest/dist/jquery.min.js"></script><script async data-pjax src="/js/txmap.js"></script><script src="https://npm.elemecdn.com/echarts@4.9.0/dist/echarts.min.js"></script><script async data-pjax src="//busuanzi.ibruce.info/busuanzi/2.3/busuanzi.pure.mini.js"></script></div><!-- hexo injector body_end start --> <script data-pjax>if(document.getElementById('recent-posts') && (location.pathname ==='/'|| '/' ==='all')){
+    var parent = document.getElementById('recent-posts');
+    var child = '<div class="recent-post-item" style="width:100%;height: auto"><div id="catalog_magnet"><div class="magnet_item"><a class="magnet_link" href="https://duqi666.github.io/categories/大模型/"><div class="magnet_link_context" style=""><span style="font-weight:500;flex:1">📚 大模型LLM (2)</span><span style="padding:0px 4px;border-radius: 8px;"><i class="fas fa-arrow-circle-right"></i></span></div></a></div><div class="magnet_item"><a class="magnet_link" href="https://duqi666.github.io/categories/强化学习/"><div class="magnet_link_context" style=""><span style="font-weight:500;flex:1">🎮 强化学习 (8)</span><span style="padding:0px 4px;border-radius: 8px;"><i class="fas fa-arrow-circle-right"></i></span></div></a></div><div class="magnet_item"><a class="magnet_link" href="https://duqi666.github.io/categories/多模态/"><div class="magnet_link_context" style=""><span style="font-weight:500;flex:1">🐱‍👓 多模态 (1)</span><span style="padding:0px 4px;border-radius: 8px;"><i class="fas fa-arrow-circle-right"></i></span></div></a></div><div class="magnet_item"><a class="magnet_link" href="https://duqi666.github.io/categories/算法/"><div class="magnet_link_context" style=""><span style="font-weight:500;flex:1">👩‍💻 算法 (1)</span><span style="padding:0px 4px;border-radius: 8px;"><i class="fas fa-arrow-circle-right"></i></span></div></a></div><div class="magnet_item"><a class="magnet_link" href="https://duqi666.github.io/categories/大模型优化/"><div class="magnet_link_context" style=""><span style="font-weight:500;flex:1">💡 大模型优化 (8)</span><span style="padding:0px 4px;border-radius: 8px;"><i class="fas fa-arrow-circle-right"></i></span></div></a></div><div class="magnet_item" style="visibility: hidden"></div><a class="magnet_link_more"  href="https://duqi666.github.io/categories" style="flex:1;text-align: center;margin-bottom: 10px;">查看更多...</a></div></div>';
+    console.log('已挂载magnet')
+    parent.insertAdjacentHTML("afterbegin",child)}
+     </script><style>#catalog_magnet{flex-wrap: wrap;display: flex;width:100%;justify-content:space-between;padding: 10px 10px 0 10px;align-content: flex-start;}.magnet_item{flex-basis: calc(50% - 5px);background: #f2f2f2;margin-bottom: 10px;border-radius: 8px;transition: all 0.2s ease-in-out;}.magnet_item:hover{background: var(--btn-bg)}.magnet_link_more{color:#555}.magnet_link{color:black}.magnet_link:hover{color:white}@media screen and (max-width: 600px) {.magnet_item {flex-basis: 100%;}}.magnet_link_context{display:flex;padding: 10px;font-size:16px;transition: all 0.2s ease-in-out;}.magnet_link_context:hover{padding: 10px 20px;}</style>
+    <style></style><script data-pjax>function electric_clock_injector_config(){
+                var parent_div_git = document.getElementsByClassName('sticky_layout')[0];
+                var item_html = '<div class="card-widget card-clock"><div class="card-glass"><div class="card-background"><div class="card-content"><div id="hexo_electric_clock"><img id="card-clock-loading" src="https://cdn.jsdelivr.net/gh/Zfour/Butterfly-clock/clock/images/weather/loading.gif" style="height: 120px; width: 100%;" data-ll-status="loading" class="entered loading"></div></div></div></div></div>';
+                console.log('已挂载electric_clock')
+                // parent_div_git.innerHTML=item_html+parent_div_git.innerHTML // 无报错，但不影响使用(支持pjax跳转)
+                parent_div_git.insertAdjacentHTML("afterbegin",item_html) // 有报错，但不影响使用(支持pjax跳转)
+            }if( document.getElementsByClassName('sticky_layout')[0] && (location.pathname ==='all'|| 'all' ==='all')){
+
+            electric_clock_injector_config()
+        } </script><script src="https://pv.sohu.com/cityjson?ie=utf-8"></script><script data-pjax  src="https://cdn.jsdelivr.net/gh/Zfour/hexo-electric-clock@1.0.6/clock.js"></script><script data-pjax>
+  function butterfly_swiper_injector_config(){
+    var parent_div_git = document.getElementById('recent-posts');
+    var item_html = '<div class="recent-post-item" style="height: auto;width: 100%"><div class="blog-slider swiper-container-fade swiper-container-horizontal" id="swiper_container"><div class="blog-slider__wrp swiper-wrapper" style="transition-duration: 0ms;"><div class="blog-slider__item swiper-slide" style="width: 750px; opacity: 1; transform: translate3d(0px, 0px, 0px); transition-duration: 0ms;"><a class="blog-slider__img" href="2026/06/06/模型量化/" alt=""><img width="48" height="48" src="/imgs/模型量化.jpg" alt="" onerror="this.src=https://unpkg.zhimg.com/akilar-candyassets/image/loading.gif; this.onerror = null;"/></a><div class="blog-slider__content"><span class="blog-slider__code">2026-06-06</span><a class="blog-slider__title" href="2026/06/06/模型量化/" alt="">模型量化-PTQ和QAT</a><div class="blog-slider__text">再怎么看我也不知道怎么描述它的啦！</div><a class="blog-slider__button" href="2026/06/06/模型量化/" alt="">详情   </a></div></div><div class="blog-slider__item swiper-slide" style="width: 750px; opacity: 1; transform: translate3d(0px, 0px, 0px); transition-duration: 0ms;"><a class="blog-slider__img" href="2026/07/25/模型蒸馏/" alt=""><img width="48" height="48" alt="" onerror="this.src=https://unpkg.zhimg.com/akilar-candyassets/image/loading.gif; this.onerror = null;"/></a><div class="blog-slider__content"><span class="blog-slider__code">2026-07-25</span><a class="blog-slider__title" href="2026/07/25/模型蒸馏/" alt="">模型蒸馏</a><div class="blog-slider__text">再怎么看我也不知道怎么描述它的啦！</div><a class="blog-slider__button" href="2026/07/25/模型蒸馏/" alt="">详情   </a></div></div><div class="blog-slider__item swiper-slide" style="width: 750px; opacity: 1; transform: translate3d(0px, 0px, 0px); transition-duration: 0ms;"><a class="blog-slider__img" href="2026/07/25/数据合成和清洗/" alt=""><img width="48" height="48" alt="" onerror="this.src=https://unpkg.zhimg.com/akilar-candyassets/image/loading.gif; this.onerror = null;"/></a><div class="blog-slider__content"><span class="blog-slider__code">2026-07-25</span><a class="blog-slider__title" href="2026/07/25/数据合成和清洗/" alt="">数据合成和清洗</a><div class="blog-slider__text">再怎么看我也不知道怎么描述它的啦！</div><a class="blog-slider__button" href="2026/07/25/数据合成和清洗/" alt="">详情   </a></div></div><div class="blog-slider__item swiper-slide" style="width: 750px; opacity: 1; transform: translate3d(0px, 0px, 0px); transition-duration: 0ms;"><a class="blog-slider__img" href="2026/06/27/微软GraphRAG解析/" alt=""><img width="48" height="48" src="/imgs/Flash-Attention.jpg" alt="" onerror="this.src=https://unpkg.zhimg.com/akilar-candyassets/image/loading.gif; this.onerror = null;"/></a><div class="blog-slider__content"><span class="blog-slider__code">2026-06-27</span><a class="blog-slider__title" href="2026/06/27/微软GraphRAG解析/" alt="">微软GraphRAG工作原理</a><div class="blog-slider__text">再怎么看我也不知道怎么描述它的啦！</div><a class="blog-slider__button" href="2026/06/27/微软GraphRAG解析/" alt="">详情   </a></div></div><div class="blog-slider__item swiper-slide" style="width: 750px; opacity: 1; transform: translate3d(0px, 0px, 0px); transition-duration: 0ms;"><a class="blog-slider__img" href="2026/06/27/llama-factory/" alt=""><img width="48" height="48" src="/imgs/llama-factory.jpg" alt="" onerror="this.src=https://unpkg.zhimg.com/akilar-candyassets/image/loading.gif; this.onerror = null;"/></a><div class="blog-slider__content"><span class="blog-slider__code">2026-06-27</span><a class="blog-slider__title" href="2026/06/27/llama-factory/" alt="">llama-factory框架</a><div class="blog-slider__text">再怎么看我也不知道怎么描述它的啦！</div><a class="blog-slider__button" href="2026/06/27/llama-factory/" alt="">详情   </a></div></div><div class="blog-slider__item swiper-slide" style="width: 750px; opacity: 1; transform: translate3d(0px, 0px, 0px); transition-duration: 0ms;"><a class="blog-slider__img" href="2025/10/27/ZeRO3/" alt=""><img width="48" height="48" src="/imgs/Deepsepeed Zero.jpg" alt="" onerror="this.src=https://unpkg.zhimg.com/akilar-candyassets/image/loading.gif; this.onerror = null;"/></a><div class="blog-slider__content"><span class="blog-slider__code">2025-10-27</span><a class="blog-slider__title" href="2025/10/27/ZeRO3/" alt="">DeepSpeed ZeRO技术</a><div class="blog-slider__text">再怎么看我也不知道怎么描述它的啦！</div><a class="blog-slider__button" href="2025/10/27/ZeRO3/" alt="">详情   </a></div></div><div class="blog-slider__item swiper-slide" style="width: 750px; opacity: 1; transform: translate3d(0px, 0px, 0px); transition-duration: 0ms;"><a class="blog-slider__img" href="2026/07/26/SwiGLU/" alt=""><img width="48" height="48" src="/imgs/Deepsepeed Zero.jpg" alt="" onerror="this.src=https://unpkg.zhimg.com/akilar-candyassets/image/loading.gif; this.onerror = null;"/></a><div class="blog-slider__content"><span class="blog-slider__code">2026-07-26</span><a class="blog-slider__title" href="2026/07/26/SwiGLU/" alt="">SwiGLU</a><div class="blog-slider__text">再怎么看我也不知道怎么描述它的啦！</div><a class="blog-slider__button" href="2026/07/26/SwiGLU/" alt="">详情   </a></div></div><div class="blog-slider__item swiper-slide" style="width: 750px; opacity: 1; transform: translate3d(0px, 0px, 0px); transition-duration: 0ms;"><a class="blog-slider__img" href="2026/06/14/KV-cache/" alt=""><img width="48" height="48" src="/imgs/KV_cache.jpg" alt="" onerror="this.src=https://unpkg.zhimg.com/akilar-candyassets/image/loading.gif; this.onerror = null;"/></a><div class="blog-slider__content"><span class="blog-slider__code">2026-06-14</span><a class="blog-slider__title" href="2026/06/14/KV-cache/" alt="">KV cache</a><div class="blog-slider__text">再怎么看我也不知道怎么描述它的啦！</div><a class="blog-slider__button" href="2026/06/14/KV-cache/" alt="">详情   </a></div></div><div class="blog-slider__item swiper-slide" style="width: 750px; opacity: 1; transform: translate3d(0px, 0px, 0px); transition-duration: 0ms;"><a class="blog-slider__img" href="2026/06/22/GraphRAG/" alt=""><img width="48" height="48" src="/imgs/GraphRAG.jpg" alt="" onerror="this.src=https://unpkg.zhimg.com/akilar-candyassets/image/loading.gif; this.onerror = null;"/></a><div class="blog-slider__content"><span class="blog-slider__code">2026-06-22</span><a class="blog-slider__title" href="2026/06/22/GraphRAG/" alt="">GraphRAG</a><div class="blog-slider__text">再怎么看我也不知道怎么描述它的啦！</div><a class="blog-slider__button" href="2026/06/22/GraphRAG/" alt="">详情   </a></div></div><div class="blog-slider__item swiper-slide" style="width: 750px; opacity: 1; transform: translate3d(0px, 0px, 0px); transition-duration: 0ms;"><a class="blog-slider__img" href="2025/10/25/Flash-Attention/" alt=""><img width="48" height="48" src="/imgs/Flash-Attention.jpg" alt="" onerror="this.src=https://unpkg.zhimg.com/akilar-candyassets/image/loading.gif; this.onerror = null;"/></a><div class="blog-slider__content"><span class="blog-slider__code">2025-10-25</span><a class="blog-slider__title" href="2025/10/25/Flash-Attention/" alt="">Flash-Attention算法</a><div class="blog-slider__text">再怎么看我也不知道怎么描述它的啦！</div><a class="blog-slider__button" href="2025/10/25/Flash-Attention/" alt="">详情   </a></div></div><div class="blog-slider__item swiper-slide" style="width: 750px; opacity: 1; transform: translate3d(0px, 0px, 0px); transition-duration: 0ms;"><a class="blog-slider__img" href="2026/06/27/Agentic-RL/" alt=""><img width="48" height="48" src="/imgs/Flash-Attention.jpg" alt="" onerror="this.src=https://unpkg.zhimg.com/akilar-candyassets/image/loading.gif; this.onerror = null;"/></a><div class="blog-slider__content"><span class="blog-slider__code">2026-06-27</span><a class="blog-slider__title" href="2026/06/27/Agentic-RL/" alt="">Agentic-RL</a><div class="blog-slider__text">再怎么看我也不知道怎么描述它的啦！</div><a class="blog-slider__button" href="2026/06/27/Agentic-RL/" alt="">详情   </a></div></div><div class="blog-slider__item swiper-slide" style="width: 750px; opacity: 1; transform: translate3d(0px, 0px, 0px); transition-duration: 0ms;"><a class="blog-slider__img" href="2025/05/05/Reinforcement_Learning_part2/" alt=""><img width="48" height="48" src="/imgs/RL2.jpg" alt="" onerror="this.src=https://unpkg.zhimg.com/akilar-candyassets/image/loading.gif; this.onerror = null;"/></a><div class="blog-slider__content"><span class="blog-slider__code">2025-05-05</span><a class="blog-slider__title" href="2025/05/05/Reinforcement_Learning_part2/" alt="">《深度学习4-强化学习》学习笔记-2</a><div class="blog-slider__text">再怎么看我也不知道怎么描述它的啦！</div><a class="blog-slider__button" href="2025/05/05/Reinforcement_Learning_part2/" alt="">详情   </a></div></div><div class="blog-slider__item swiper-slide" style="width: 750px; opacity: 1; transform: translate3d(0px, 0px, 0px); transition-duration: 0ms;"><a class="blog-slider__img" href="2025/09/01/PPO/" alt=""><img width="48" height="48" src="/imgs/PPO.jpg" alt="" onerror="this.src=https://unpkg.zhimg.com/akilar-candyassets/image/loading.gif; this.onerror = null;"/></a><div class="blog-slider__content"><span class="blog-slider__code">2025-09-01</span><a class="blog-slider__title" href="2025/09/01/PPO/" alt="">强化学习PPO算法</a><div class="blog-slider__text">再怎么看我也不知道怎么描述它的啦！</div><a class="blog-slider__button" href="2025/09/01/PPO/" alt="">详情   </a></div></div><div class="blog-slider__item swiper-slide" style="width: 750px; opacity: 1; transform: translate3d(0px, 0px, 0px); transition-duration: 0ms;"><a class="blog-slider__img" href="2026/05/27/RAG/" alt=""><img width="48" height="48" src="/imgs/RAG_optimization.jpg" alt="" onerror="this.src=https://unpkg.zhimg.com/akilar-candyassets/image/loading.gif; this.onerror = null;"/></a><div class="blog-slider__content"><span class="blog-slider__code">2026-05-27</span><a class="blog-slider__title" href="2026/05/27/RAG/" alt="">RAG优化</a><div class="blog-slider__text">再怎么看我也不知道怎么描述它的啦！</div><a class="blog-slider__button" href="2026/05/27/RAG/" alt="">详情   </a></div></div><div class="blog-slider__item swiper-slide" style="width: 750px; opacity: 1; transform: translate3d(0px, 0px, 0px); transition-duration: 0ms;"><a class="blog-slider__img" href="2025/08/24/Reinforcement_Learning/" alt=""><img width="48" height="48" src="/imgs/Reinforcement_Learning.png" alt="" onerror="this.src=https://unpkg.zhimg.com/akilar-candyassets/image/loading.gif; this.onerror = null;"/></a><div class="blog-slider__content"><span class="blog-slider__code">2025-08-24</span><a class="blog-slider__title" href="2025/08/24/Reinforcement_Learning/" alt="">《深度学习4-强化学习》学习笔记</a><div class="blog-slider__text">再怎么看我也不知道怎么描述它的啦！</div><a class="blog-slider__button" href="2025/08/24/Reinforcement_Learning/" alt="">详情   </a></div></div><div class="blog-slider__item swiper-slide" style="width: 750px; opacity: 1; transform: translate3d(0px, 0px, 0px); transition-duration: 0ms;"><a class="blog-slider__img" href="2025/04/20/算法/" alt=""><img width="48" height="48" src="/imgs/algorithm.png" alt="" onerror="this.src=https://unpkg.zhimg.com/akilar-candyassets/image/loading.gif; this.onerror = null;"/></a><div class="blog-slider__content"><span class="blog-slider__code">2025-04-20</span><a class="blog-slider__title" href="2025/04/20/算法/" alt="">一些算法</a><div class="blog-slider__text">再怎么看我也不知道怎么描述它的啦！</div><a class="blog-slider__button" href="2025/04/20/算法/" alt="">详情   </a></div></div><div class="blog-slider__item swiper-slide" style="width: 750px; opacity: 1; transform: translate3d(0px, 0px, 0px); transition-duration: 0ms;"><a class="blog-slider__img" href="2026/01/31/各种Normalization/" alt=""><img width="48" height="48" src="/imgs/MQA&amp;GQA.jpg" alt="" onerror="this.src=https://unpkg.zhimg.com/akilar-candyassets/image/loading.gif; this.onerror = null;"/></a><div class="blog-slider__content"><span class="blog-slider__code">2026-01-31</span><a class="blog-slider__title" href="2026/01/31/各种Normalization/" alt="">各种 Normalization 方法</a><div class="blog-slider__text">再怎么看我也不知道怎么描述它的啦！</div><a class="blog-slider__button" href="2026/01/31/各种Normalization/" alt="">详情   </a></div></div><div class="blog-slider__item swiper-slide" style="width: 750px; opacity: 1; transform: translate3d(0px, 0px, 0px); transition-duration: 0ms;"><a class="blog-slider__img" href="2026/06/06/八股/" alt=""><img width="48" height="48" src="/imgs/MQA&amp;GQA.jpg" alt="" onerror="this.src=https://unpkg.zhimg.com/akilar-candyassets/image/loading.gif; this.onerror = null;"/></a><div class="blog-slider__content"><span class="blog-slider__code">2026-06-06</span><a class="blog-slider__title" href="2026/06/06/八股/" alt="">大模型算法面试题</a><div class="blog-slider__text">再怎么看我也不知道怎么描述它的啦！</div><a class="blog-slider__button" href="2026/06/06/八股/" alt="">详情   </a></div></div><div class="blog-slider__item swiper-slide" style="width: 750px; opacity: 1; transform: translate3d(0px, 0px, 0px); transition-duration: 0ms;"><a class="blog-slider__img" href="2026/05/23/Sparse-Attention/" alt=""><img width="48" height="48" src="/imgs/sparse.png" alt="" onerror="this.src=https://unpkg.zhimg.com/akilar-candyassets/image/loading.gif; this.onerror = null;"/></a><div class="blog-slider__content"><span class="blog-slider__code">2026-05-23</span><a class="blog-slider__title" href="2026/05/23/Sparse-Attention/" alt="">稀疏注意力</a><div class="blog-slider__text">再怎么看我也不知道怎么描述它的啦！</div><a class="blog-slider__button" href="2026/05/23/Sparse-Attention/" alt="">详情   </a></div></div><div class="blog-slider__item swiper-slide" style="width: 750px; opacity: 1; transform: translate3d(0px, 0px, 0px); transition-duration: 0ms;"><a class="blog-slider__img" href="2026/06/28/RLVR/" alt=""><img width="48" height="48" src="/imgs/RLVR.jpg" alt="" onerror="this.src=https://unpkg.zhimg.com/akilar-candyassets/image/loading.gif; this.onerror = null;"/></a><div class="blog-slider__content"><span class="blog-slider__code">2026-06-28</span><a class="blog-slider__title" href="2026/06/28/RLVR/" alt="">强化学习与可验证奖励：RLVR</a><div class="blog-slider__text">再怎么看我也不知道怎么描述它的啦！</div><a class="blog-slider__button" href="2026/06/28/RLVR/" alt="">详情   </a></div></div><div class="blog-slider__item swiper-slide" style="width: 750px; opacity: 1; transform: translate3d(0px, 0px, 0px); transition-duration: 0ms;"><a class="blog-slider__img" href="2025/11/08/RLHF/" alt=""><img width="48" height="48" src="/imgs/thumbnail.png" alt="" onerror="this.src=https://unpkg.zhimg.com/akilar-candyassets/image/loading.gif; this.onerror = null;"/></a><div class="blog-slider__content"><span class="blog-slider__code">2025-11-08</span><a class="blog-slider__title" href="2025/11/08/RLHF/" alt="">人类反馈强化学习：RLHF</a><div class="blog-slider__text">再怎么看我也不知道怎么描述它的啦！</div><a class="blog-slider__button" href="2025/11/08/RLHF/" alt="">详情   </a></div></div><div class="blog-slider__item swiper-slide" style="width: 750px; opacity: 1; transform: translate3d(0px, 0px, 0px); transition-duration: 0ms;"><a class="blog-slider__img" href="2026/08/06/MTP/" alt=""><img width="48" height="48" src="/imgs/MTP.png" alt="" onerror="this.src=https://unpkg.zhimg.com/akilar-candyassets/image/loading.gif; this.onerror = null;"/></a><div class="blog-slider__content"><span class="blog-slider__code">2026-08-06</span><a class="blog-slider__title" href="2026/08/06/MTP/" alt="">MTP</a><div class="blog-slider__text">再怎么看我也不知道怎么描述它的啦！</div><a class="blog-slider__button" href="2026/08/06/MTP/" alt="">详情   </a></div></div><div class="blog-slider__item swiper-slide" style="width: 750px; opacity: 1; transform: translate3d(0px, 0px, 0px); transition-duration: 0ms;"><a class="blog-slider__img" href="2026/01/21/MQA&amp;GQA/" alt=""><img width="48" height="48" src="/imgs/MQA&amp;GQA.jpg" alt="" onerror="this.src=https://unpkg.zhimg.com/akilar-candyassets/image/loading.gif; this.onerror = null;"/></a><div class="blog-slider__content"><span class="blog-slider__code">2026-01-21</span><a class="blog-slider__title" href="2026/01/21/MQA&amp;GQA/" alt="">MQA&amp;GQA</a><div class="blog-slider__text">再怎么看我也不知道怎么描述它的啦！</div><a class="blog-slider__button" href="2026/01/21/MQA&amp;GQA/" alt="">详情   </a></div></div><div class="blog-slider__item swiper-slide" style="width: 750px; opacity: 1; transform: translate3d(0px, 0px, 0px); transition-duration: 0ms;"><a class="blog-slider__img" href="2025/12/06/MOE/" alt=""><img width="48" height="48" src="/imgs/MOE.png" alt="" onerror="this.src=https://unpkg.zhimg.com/akilar-candyassets/image/loading.gif; this.onerror = null;"/></a><div class="blog-slider__content"><span class="blog-slider__code">2025-12-06</span><a class="blog-slider__title" href="2025/12/06/MOE/" alt="">MOE模型</a><div class="blog-slider__text">再怎么看我也不知道怎么描述它的啦！</div><a class="blog-slider__button" href="2025/12/06/MOE/" alt="">详情   </a></div></div><div class="blog-slider__item swiper-slide" style="width: 750px; opacity: 1; transform: translate3d(0px, 0px, 0px); transition-duration: 0ms;"><a class="blog-slider__img" href="2026/06/13/LoRA_QLoRA_DoRA_AdaLoRA/" alt=""><img width="48" height="48" src="/imgs/LoRA.jpg" alt="" onerror="this.src=https://unpkg.zhimg.com/akilar-candyassets/image/loading.gif; this.onerror = null;"/></a><div class="blog-slider__content"><span class="blog-slider__code">2026-06-13</span><a class="blog-slider__title" href="2026/06/13/LoRA_QLoRA_DoRA_AdaLoRA/" alt="">PEFT-LoRA及其变体</a><div class="blog-slider__text">再怎么看我也不知道怎么描述它的啦！</div><a class="blog-slider__button" href="2026/06/13/LoRA_QLoRA_DoRA_AdaLoRA/" alt="">详情   </a></div></div><div class="blog-slider__item swiper-slide" style="width: 750px; opacity: 1; transform: translate3d(0px, 0px, 0px); transition-duration: 0ms;"><a class="blog-slider__img" href="2026/07/22/MLA/" alt=""><img width="48" height="48" src="/imgs/MLA.png" alt="" onerror="this.src=https://unpkg.zhimg.com/akilar-candyassets/image/loading.gif; this.onerror = null;"/></a><div class="blog-slider__content"><span class="blog-slider__code">2026-07-22</span><a class="blog-slider__title" href="2026/07/22/MLA/" alt="">MLA（Multi-head Latent Attention）</a><div class="blog-slider__text">再怎么看我也不知道怎么描述它的啦！</div><a class="blog-slider__button" href="2026/07/22/MLA/" alt="">详情   </a></div></div><div class="blog-slider__item swiper-slide" style="width: 750px; opacity: 1; transform: translate3d(0px, 0px, 0px); transition-duration: 0ms;"><a class="blog-slider__img" href="2026/05/30/GSPO/" alt=""><img width="48" height="48" src="/imgs/GSPO.jpg" alt="" onerror="this.src=https://unpkg.zhimg.com/akilar-candyassets/image/loading.gif; this.onerror = null;"/></a><div class="blog-slider__content"><span class="blog-slider__code">2026-05-30</span><a class="blog-slider__title" href="2026/05/30/GSPO/" alt="">GSPO算法</a><div class="blog-slider__text">再怎么看我也不知道怎么描述它的啦！</div><a class="blog-slider__button" href="2026/05/30/GSPO/" alt="">详情   </a></div></div><div class="blog-slider__item swiper-slide" style="width: 750px; opacity: 1; transform: translate3d(0px, 0px, 0px); transition-duration: 0ms;"><a class="blog-slider__img" href="2026/05/30/GRPO/" alt=""><img width="48" height="48" src="/imgs/GRPO.jpg" alt="" onerror="this.src=https://unpkg.zhimg.com/akilar-candyassets/image/loading.gif; this.onerror = null;"/></a><div class="blog-slider__content"><span class="blog-slider__code">2026-05-30</span><a class="blog-slider__title" href="2026/05/30/GRPO/" alt="">GRPO算法</a><div class="blog-slider__text">再怎么看我也不知道怎么描述它的啦！</div><a class="blog-slider__button" href="2026/05/30/GRPO/" alt="">详情   </a></div></div><div class="blog-slider__item swiper-slide" style="width: 750px; opacity: 1; transform: translate3d(0px, 0px, 0px); transition-duration: 0ms;"><a class="blog-slider__img" href="2026/04/11/DeepSeekV3/" alt=""><img width="48" height="48" src="/imgs/deepseek.png" alt="" onerror="this.src=https://unpkg.zhimg.com/akilar-candyassets/image/loading.gif; this.onerror = null;"/></a><div class="blog-slider__content"><span class="blog-slider__code">2026-04-11</span><a class="blog-slider__title" href="2026/04/11/DeepSeekV3/" alt="">DeepSeek V3模型架构</a><div class="blog-slider__text">再怎么看我也不知道怎么描述它的啦！</div><a class="blog-slider__button" href="2026/04/11/DeepSeekV3/" alt="">详情   </a></div></div><div class="blog-slider__item swiper-slide" style="width: 750px; opacity: 1; transform: translate3d(0px, 0px, 0px); transition-duration: 0ms;"><a class="blog-slider__img" href="2025/11/08/DPO/" alt=""><img width="48" height="48" src="/imgs/algorithm.png" alt="" onerror="this.src=https://unpkg.zhimg.com/akilar-candyassets/image/loading.gif; this.onerror = null;"/></a><div class="blog-slider__content"><span class="blog-slider__code">2025-11-08</span><a class="blog-slider__title" href="2025/11/08/DPO/" alt="">DPO算法</a><div class="blog-slider__text">再怎么看我也不知道怎么描述它的啦！</div><a class="blog-slider__button" href="2025/11/08/DPO/" alt="">详情   </a></div></div><div class="blog-slider__item swiper-slide" style="width: 750px; opacity: 1; transform: translate3d(0px, 0px, 0px); transition-duration: 0ms;"><a class="blog-slider__img" href="2026/01/18/CLIP/" alt=""><img width="48" height="48" src="/imgs/clip.jpg" alt="" onerror="this.src=https://unpkg.zhimg.com/akilar-candyassets/image/loading.gif; this.onerror = null;"/></a><div class="blog-slider__content"><span class="blog-slider__code">2026-01-18</span><a class="blog-slider__title" href="2026/01/18/CLIP/" alt="">多模态模型--CLIP</a><div class="blog-slider__text">再怎么看我也不知道怎么描述它的啦！</div><a class="blog-slider__button" href="2026/01/18/CLIP/" alt="">详情   </a></div></div><div class="blog-slider__item swiper-slide" style="width: 750px; opacity: 1; transform: translate3d(0px, 0px, 0px); transition-duration: 0ms;"><a class="blog-slider__img" href="2025/04/16/Diagrammatize_GPT/" alt=""><img width="48" height="48" src="/imgs/GPT2.jpg" alt="" onerror="this.src=https://unpkg.zhimg.com/akilar-candyassets/image/loading.gif; this.onerror = null;"/></a><div class="blog-slider__content"><span class="blog-slider__code">2025-04-16</span><a class="blog-slider__title" href="2025/04/16/Diagrammatize_GPT/" alt="">《GPT图解》学习笔记</a><div class="blog-slider__text">再怎么看我也不知道怎么描述它的啦！</div><a class="blog-slider__button" href="2025/04/16/Diagrammatize_GPT/" alt="">详情   </a></div></div></div><div class="blog-slider__pagination swiper-pagination-clickable swiper-pagination-bullets"></div></div></div>';
+    console.log('已挂载butterfly_swiper')
+    parent_div_git.insertAdjacentHTML("afterbegin",item_html)
+    }
+  var elist = 'undefined'.split(',');
+  var cpage = location.pathname;
+  var epage = 'all';
+  var flag = 0;
+
+  for (var i=0;i<elist.length;i++){
+    if (cpage.includes(elist[i])){
+      flag++;
+    }
+  }
+
+  if ((epage ==='all')&&(flag == 0)){
+    butterfly_swiper_injector_config();
+  }
+  else if (epage === cpage){
+    butterfly_swiper_injector_config();
+  }
+  </script><script defer src="https://npm.elemecdn.com/hexo-butterfly-swiper/lib/swiper.min.js"></script><script defer data-pjax src="https://npm.elemecdn.com/hexo-butterfly-swiper/lib/swiper_init.js"></script><div class="js-pjax"><script async="async">var arr = document.getElementsByClassName('recent-post-item');
+for(var i = 0;i<arr.length;i++){
+    arr[i].classList.add('wow');
+    arr[i].classList.add('animate__zoomIn');
+    arr[i].setAttribute('data-wow-duration', '1s');
+    arr[i].setAttribute('data-wow-delay', '0s');
+    arr[i].setAttribute('data-wow-offset', '100');
+    arr[i].setAttribute('data-wow-iteration', '1');
+  }</script><script async="async">var arr = document.getElementsByClassName('card-widget');
+for(var i = 0;i<arr.length;i++){
+    arr[i].classList.add('wow');
+    arr[i].classList.add('animate__zoomIn');
+    arr[i].setAttribute('data-wow-duration', '1s');
+    arr[i].setAttribute('data-wow-delay', '0s');
+    arr[i].setAttribute('data-wow-offset', '100');
+    arr[i].setAttribute('data-wow-iteration', '1');
+  }</script><script async="async">var arr = document.getElementsByClassName('post-class');
+for(var i = 0;i<arr.length;i++){
+    arr[i].classList.add('wow');
+    arr[i].classList.add('animate__zoomIn');
+    arr[i].setAttribute('data-wow-duration', '0.5s');
+    arr[i].setAttribute('data-wow-delay', '0s');
+    arr[i].setAttribute('data-wow-offset', '100');
+    arr[i].setAttribute('data-wow-iteration', '1');
+  }</script><script async="async">var arr = document.getElementsByClassName('archive-class');
+for(var i = 0;i<arr.length;i++){
+    arr[i].classList.add('wow');
+    arr[i].classList.add('animate__zoomIn');
+    arr[i].setAttribute('data-wow-duration', '1s');
+    arr[i].setAttribute('data-wow-delay', '0s');
+    arr[i].setAttribute('data-wow-offset', '100');
+    arr[i].setAttribute('data-wow-iteration', '1');
+  }</script><script async="async">var arr = document.getElementsByClassName('page-class');
+for(var i = 0;i<arr.length;i++){
+    arr[i].classList.add('wow');
+    arr[i].classList.add('animate__zoomIn');
+    arr[i].setAttribute('data-wow-duration', '1s');
+    arr[i].setAttribute('data-wow-delay', '0s');
+    arr[i].setAttribute('data-wow-offset', '100');
+    arr[i].setAttribute('data-wow-iteration', '1');
+  }</script></div><script defer src="https://npm.elemecdn.com/hexo-butterfly-wowjs/lib/wow.min.js"></script><script defer src="https://npm.elemecdn.com/hexo-butterfly-wowjs/lib/wow_init.js"></script><!-- hexo injector body_end end --></body></html>
